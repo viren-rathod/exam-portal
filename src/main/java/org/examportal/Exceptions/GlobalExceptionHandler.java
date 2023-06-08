@@ -35,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    //Blog APIs exceptions
+    //Exam APIs exceptions
     @ExceptionHandler(ExamAPIException.class)
     public ResponseEntity<ErrorDetails> handleBlogAPIException( ExamAPIException exception,
                                                                 WebRequest webRequest ) {

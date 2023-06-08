@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor  
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
@@ -24,7 +24,7 @@ public class User {
     private String username;
     @Column(nullable = false, unique = true)
     private String email;
-    @NotNull(message = "Password can not be null or blank!")
+    @NotNull(message = "Password can not be null or empty!")
     @Column(nullable = false)
     private String password;
 
