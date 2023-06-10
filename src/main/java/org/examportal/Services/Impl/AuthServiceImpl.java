@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String register(RegisterDto registerDto) {
-        if(Boolean.TRUE.equals(userRepository.existsByUsername(registerDto.getUsername()))){
+        if(Boolean.TRUE.equals(existByUsername(registerDto.getUsername()))){
             throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Username already exists!");
         }
 
@@ -73,5 +73,10 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         return "Registered successfully!";
+    }
+
+    @Override
+    public boolean existByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 }
