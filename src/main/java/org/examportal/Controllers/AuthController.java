@@ -7,10 +7,7 @@ import org.examportal.DTOs.RegisterDto;
 import org.examportal.Services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag( name = "REST APIs for Authentication" )
 @RestController
@@ -31,6 +28,7 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/register", "/signup"})
+    @CrossOrigin(value = "*")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
         String response = authService.register(registerDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
