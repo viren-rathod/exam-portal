@@ -18,3 +18,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
 }
+/*
+    The AuthenticationEntryPoint interface is responsible for handling authentication failures for unauthenticated requests. It is used by Spring Security to configure the behavior when a client attempts to access a protected resource without being authenticated.
+ */

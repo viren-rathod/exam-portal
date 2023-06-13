@@ -1,0 +1,37 @@
+#app:
+#  jwt-secret: 0f12ef9c94afc9ef6c251aa932cf6024f4deb22aba0262d09c74009c30a8fb39
+#app-jwt-expiration-milliseconds: 604800000
+#server:
+#  port: 9191
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    password: root
+#    url: jdbc:mysql://localhost:3306/exam_portal?useSSL=false&serverTimeZone=UTC
+#    username: root
+#  jpa:
+#    generate-ddl: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
+#    show-sql: true
+#  oauth2:
+#    client:
+#      enabled: true
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 133559305202-6f28lun6n9gk2o9ne39its99a2d4b6g1.apps.googleusercontent.com
+#            client-secret: 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
+
+
+#spring:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 133559305202-6f28lun6n9gk2o9ne39its99a2d4b6g1.apps.googleusercontent.com
+#            client-secret: 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

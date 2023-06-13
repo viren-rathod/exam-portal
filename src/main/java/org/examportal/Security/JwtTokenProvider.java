@@ -3,6 +3,7 @@ package org.examportal.Security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.examportal.Exceptions.ExamAPIException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtTokenProvider {
     @Value("${app.jwt-secret}")
@@ -47,6 +49,7 @@ public class JwtTokenProvider {
 
     // validate Jwt token
     public boolean validateToken(String token) {
+        log.info("\n\nT.O.K.E.N. :-->"+token);
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())
