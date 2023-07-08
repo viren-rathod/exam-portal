@@ -60,10 +60,10 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(this.googleClientRegistration());
-    }
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository() {
+//        return new InMemoryClientRegistrationRepository(this.googleClientRegistration());
+//    }
 
     private ClientRegistration googleClientRegistration() {
         return ClientRegistration.withRegistrationId("google")
@@ -84,29 +84,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)  //  .csrf(csrf -> csrf.disable())
+        httpSecurity.csrf(AbstractHttpConfigurer::disable)//  .csrf(csrf -> csrf.disable())
+                .cors(AbstractHttpConfigurer::disable)
          .authorizeHttpRequests(authz -> {
                      authz
-                            // .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                             .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                             .requestMatchers(HttpMethod.POST, "/api/auth/signin").permitAll()
-                             .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
-                             .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                             .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                             .requestMatchers(HttpMethod.OPTIONS).permitAll()
+//                             .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+//                             .requestMatchers(HttpMethod.POST, "/api/auth/signin").permitAll()
+//                             .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
+//                             .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                              .requestMatchers("/swagger-ui/**").permitAll()
                              .requestMatchers("/v3/api-docs/**").permitAll()
-                             .requestMatchers("/api/google").authenticated()
+//                             .requestMatchers("/api/google").authenticated()
                              .anyRequest().authenticated();
                     }
                         )
+
                 // .oauth2Login(Customizer.withDefaults())
-                .oauth2Login(oauth2Client -> {
-                });
-//                .exceptionHandling( exception -> exception
-//                        .authenticationEntryPoint(authenticationEntryPoint)
-//                );
-//                .sessionManagement( session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                );
+//                .oauth2Login(oauth2Client -> {
+//                });
+                .exceptionHandling( exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
+                .sessionManagement( session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
 
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

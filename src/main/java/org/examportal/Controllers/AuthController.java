@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 @Tag( name = "REST APIs for Authentication" )
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin("*")
+
 public class AuthController {
     private AuthService authService;
     private CityService cityService;
@@ -63,7 +65,7 @@ public class AuthController {
             jwtAuthResponse.setAccessToken(token);
         }
         else {
-            RegisterDto registerDto = new RegisterDto(oAuth2AuthenticationToken.getPrincipal().getAttributes().get("name").toString(),oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString(),oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString(),"$Viren@_bv67989!--*");
+            RegisterDto registerDto = new RegisterDto(oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString(),oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString(),"$Viren@_bv67989!--*");
             token = authService.register(registerDto);
         }
         return ResponseEntity.ok(token);
