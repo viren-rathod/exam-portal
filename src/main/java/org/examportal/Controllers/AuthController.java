@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Tag( name = "REST APIs for Authentication" )
+@Tag(name = "REST APIs for Authentication")
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
@@ -40,52 +40,35 @@ public class AuthController {
     private CityService cityService;
     private StateService stateService;
 
-    public AuthController(AuthService authService,CityService cityService,StateService stateService) {
+    public AuthController(AuthService authService, CityService cityService, StateService stateService) {
         this.authService = authService;
         this.stateService = stateService;
         this.cityService = cityService;
     }
 
     @PostMapping(value = {"/login", "/signin"})
-    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto) {
         String token = authService.login(loginDto);
         JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
         jwtAuthResponse.setAccessToken(token);
         return ResponseEntity.ok(jwtAuthResponse);
     }
 
-    @GetMapping("/google")
-    public ResponseEntity<String> currentUser (OAuth2AuthenticationToken oAuth2AuthenticationToken) {
-        log.info(oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString());
-        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
-         String token = null;
-        if(Boolean.TRUE.equals(authService.existByUsername(oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString()))){
-            LoginDto loginDto = new LoginDto(oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString(),"$Viren@_bv67989!--*");
-            token = authService.login(loginDto);
-            jwtAuthResponse.setAccessToken(token);
-        }
-        else {
-            RegisterDto registerDto = new RegisterDto(oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString(),oAuth2AuthenticationToken.getPrincipal().getAttributes().get("email").toString(),"$Viren@_bv67989!--*");
-            token = authService.register(registerDto);
-        }
-        return ResponseEntity.ok(token);
-    }
-
     @PostMapping(value = {"/register", "/signup"})
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
+    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         String response = authService.register(registerDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/states")
-    public List<String> getAllStates(){
+    public List<String> getAllStates() {
         List<State> states = stateService.findAllState();
         return states.stream().map(State::getName).toList();
     }
 
     @GetMapping("/cities/{stateId}")
     public List<String> getCitiesByState(@PathVariable int stateId) {
-        List<City> cities = cityService.findCityBYStateId(stateService.findState( stateId));
+        List<City> cities = cityService.findCityBYStateId(stateService.findState(stateId));
         return cities.stream().map(City::getName).toList();
     }
 }

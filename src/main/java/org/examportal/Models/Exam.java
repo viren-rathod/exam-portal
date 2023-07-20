@@ -34,7 +34,7 @@ public class Exam {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "exam_category",
-    joinColumns = @JoinColumn(name = "exam_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "exam_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
     )
     private Set<Category> categories = new LinkedHashSet<>();

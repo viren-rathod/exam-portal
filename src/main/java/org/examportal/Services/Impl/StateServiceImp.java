@@ -22,7 +22,8 @@ public class StateServiceImp implements StateService {
     public List<State> findAllState() {
         return stateRepository.findAll();
     }
-    public Optional<State> findState(int id){
+
+    public Optional<State> findState(int id) {
         return stateRepository.findById(id);
     }
 }

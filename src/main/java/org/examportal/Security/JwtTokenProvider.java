@@ -23,7 +23,7 @@ public class JwtTokenProvider {
     private long jwtExpirationDate;
 
     //Generating JWT Token
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication) {
         String username = authentication.getName();
 
         Date currentDate = new Date();
@@ -38,7 +38,7 @@ public class JwtTokenProvider {
     }
 
     // get username from Jwt token
-    public String getUsername(String token){
+    public String getUsername(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key())
                 .build()
@@ -49,7 +49,7 @@ public class JwtTokenProvider {
 
     // validate Jwt token
     public boolean validateToken(String token) {
-        log.info("\n\nT.O.K.E.N. :-->"+token);
+        log.info("\n\nT.O.K.E.N. :-->" + token);
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())
@@ -67,7 +67,7 @@ public class JwtTokenProvider {
         }
     }
 
-    private Key key(){
-        return Keys.hmacShaKeyFor( Decoders.BASE64.decode(jwtSecret) );
+    private Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 }

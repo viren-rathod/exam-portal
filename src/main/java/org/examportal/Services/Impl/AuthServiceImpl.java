@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider =jwtTokenProvider;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -51,11 +51,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String register(RegisterDto registerDto) {
-        if(Boolean.TRUE.equals(existByUsername(registerDto.getUsername()))){
+        if (Boolean.TRUE.equals(existByUsername(registerDto.getUsername()))) {
             throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Username already exists!");
         }
 
-        if(Boolean.TRUE.equals(userRepository.existsByEmail(registerDto.getEmail()))){
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(registerDto.getEmail()))) {
             throw new ExamAPIException(HttpStatus.BAD_REQUEST, "E - mail already exists!");
         }
 

@@ -26,7 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // handle resource not found exception
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception,
-                                                                        WebRequest webRequest ) {
+                                                                        WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
                 new Date(),
                 exception.getMessage(),
@@ -37,8 +37,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //Exam APIs exceptions
     @ExceptionHandler(ExamAPIException.class)
-    public ResponseEntity<ErrorDetails> handleBlogAPIException( ExamAPIException exception,
-                                                                WebRequest webRequest ) {
+    public ResponseEntity<ErrorDetails> handleBlogAPIException(ExamAPIException exception,
+                                                               WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
                 new Date(),
                 exception.getMessage(),
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // handle Access denied exception
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException exception,
-                                                                    WebRequest webRequest){
+                                                                    WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(),
                 webRequest.getDescription(false));
 //        log.info("working fine..");
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // global exception
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception,
-                                                              WebRequest webRequest){
+                                                              WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(),
                 webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -87,8 +87,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpStatusCode status,
                                                                   WebRequest request) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) ->{
-            String fieldName = ((FieldError)error).getField();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();
             errors.put(fieldName, message);
         });

@@ -18,6 +18,7 @@ import java.util.Set;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
+
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
@@ -26,7 +27,7 @@ public class CategoryController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<CategoryDto> addCategory(@Valid  @RequestBody CategoryDto categoryDto){
+    public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody CategoryDto categoryDto) {
         CategoryDto savedCategory = categoryService.addCategory(categoryDto);
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }

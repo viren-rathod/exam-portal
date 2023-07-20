@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;
 
-public interface QuestionsRepository extends JpaRepository<Questions,Long> {
+public interface QuestionsRepository extends JpaRepository<Questions, Long> {
     Set<Questions> findByCategory(Category category);
 }

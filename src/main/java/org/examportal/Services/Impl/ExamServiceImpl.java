@@ -27,16 +27,16 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public ExamDto addExam(ExamDto exam) {
-        Exam savedExam = modelMapper.map(exam,Exam.class);
+        Exam savedExam = modelMapper.map(exam, Exam.class);
         examRepository.save(savedExam);
-        return modelMapper.map(savedExam,ExamDto.class);
+        return modelMapper.map(savedExam, ExamDto.class);
     }
 
     @Override
     public ExamDto updateExam(ExamDto exam) {
-        Exam savedExam = modelMapper.map(exam,Exam.class);
+        Exam savedExam = modelMapper.map(exam, Exam.class);
         examRepository.save(savedExam);
-        return modelMapper.map(savedExam,ExamDto.class);
+        return modelMapper.map(savedExam, ExamDto.class);
     }
 
     @Override
@@ -47,13 +47,13 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public ExamDto getExam(Long examId) {
-        Exam exam = examRepository.findById(examId).orElseThrow(()->new ResourceNotFoundException("Exam","id",examId));
+        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
         return modelMapper.map(exam, ExamDto.class);
     }
 
     @Override
     public void deleteExam(Long examId) {
-        Exam exam = examRepository.findById(examId).orElseThrow(()->new ResourceNotFoundException("Exam","id",examId));
+        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
         examRepository.delete(exam);
     }
 }

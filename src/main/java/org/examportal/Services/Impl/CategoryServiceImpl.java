@@ -23,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
     }
+
     @Override
     public CategoryDto addCategory(CategoryDto categoryDto) {
         Category category = modelMapper.map(categoryDto, Category.class);

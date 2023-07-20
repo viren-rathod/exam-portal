@@ -24,7 +24,7 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String cName;
     private String cDescription;
-    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Questions> questions;
 }

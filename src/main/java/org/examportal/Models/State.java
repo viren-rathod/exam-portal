@@ -13,9 +13,9 @@ import java.util.List;
 public class State {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int stateId;
+    private int stateId;
     private String name;
     @JsonManagedReference
-    @OneToMany(mappedBy = "state",fetch = FetchType.EAGER)
-    private List<City> cities  = new ArrayList<>();
+    @OneToMany(mappedBy = "state", fetch = FetchType.EAGER)
+    private List<City> cities = new ArrayList<>();
 }

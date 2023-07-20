@@ -13,7 +13,7 @@ import lombok.*;
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int cityId;
+    private int cityId;
     private String name;
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)

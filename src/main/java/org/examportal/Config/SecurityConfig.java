@@ -51,7 +51,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public static PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -60,72 +60,29 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        return new InMemoryClientRegistrationRepository(this.googleClientRegistration());
-//    }
-
-    private ClientRegistration googleClientRegistration() {
-        return ClientRegistration.withRegistrationId("google")
-                .clientId("133559305202-6f28lun6n9gk2o9ne39its99a2d4b6g1.apps.googleusercontent.com")
-                .clientSecret("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")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
-                .scope("openid", "profile", "email", "address", "phone")
-                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
-                .tokenUri("https://www.googleapis.com/oauth2/v4/token")
-                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
-                .userNameAttributeName(IdTokenClaimNames.SUB)
-                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
-                .clientName("Google")
-                .build();
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)//  .csrf(csrf -> csrf.disable())
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)  // .csrf(csrf -> csrf.disable())
                 .cors(AbstractHttpConfigurer::disable)
-         .authorizeHttpRequests(authz -> {
-                     authz
-                             .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                             .requestMatchers(HttpMethod.OPTIONS).permitAll()
-//                             .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-//                             .requestMatchers(HttpMethod.POST, "/api/auth/signin").permitAll()
-//                             .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
-//                             .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-                             .requestMatchers("/swagger-ui/**").permitAll()
-                             .requestMatchers("/v3/api-docs/**").permitAll()
-//                             .requestMatchers("/api/google").authenticated()
-                             .anyRequest().authenticated();
-                    }
-                        )
-
-                // .oauth2Login(Customizer.withDefaults())
-//                .oauth2Login(oauth2Client -> {
-//                });
-                .exceptionHandling( exception -> exception
+                .authorizeHttpRequests(authz -> {
+                            authz
+                                    .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                                    .requestMatchers(HttpMethod.GET).permitAll()
+                                    .requestMatchers("/swagger-ui/**").permitAll()
+                                    .requestMatchers("/v3/api-docs/**").permitAll()
+                                    .anyRequest().authenticated();
+                        }
+                )
+                .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)
                 )
-                .sessionManagement( session -> session
+                .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
+        ;
 
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 }
-
-//@Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//
-//                .authorizeHttpRequests(a -> a
-//                        .requestMatchers("/auth/**").authenticated()
-//                        .requestMatchers(HttpMethod.GET, "/formlogin").permitAll()
-//                )
-//                .oauth2Login(oauth2Client -> {
-////                    oauth2Client.clientRegistrationRepository(clientRegistrationRepository());
-//                });
-//        return http.build();
-//    }

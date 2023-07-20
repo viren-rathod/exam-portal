@@ -52,7 +52,7 @@ public class ExamController {
         return ResponseEntity.ok(examService.updateExam(exam));
     }
 
-//    //delete exam
+    //delete exam
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{examId}")
