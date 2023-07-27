@@ -10,5 +10,4 @@ public interface AuthService {
 
     String register(RegisterDto registerDto);
 
-    boolean existByUsername(String username);
 }
