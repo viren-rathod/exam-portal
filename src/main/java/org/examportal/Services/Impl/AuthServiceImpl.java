@@ -9,6 +9,7 @@ import org.examportal.Repositories.RoleRepository;
 import org.examportal.Repositories.UserRepository;
 import org.examportal.Security.JwtTokenProvider;
 import org.examportal.Services.AuthService;
+import org.examportal.Services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,17 +28,20 @@ public class AuthServiceImpl implements AuthService {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private JwtTokenProvider jwtTokenProvider;
+    private UserService userService;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager,
                            UserRepository userRepository,
                            RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder,
-                           JwtTokenProvider jwtTokenProvider) {
+                           JwtTokenProvider jwtTokenProvider,
+                           UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userService = userService;
     }
 
     @Override
@@ -51,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String register(RegisterDto registerDto) {
-        if (Boolean.TRUE.equals(existByUsername(registerDto.getUsername()))) {
+        if (Boolean.TRUE.equals(userService.existByUsername(registerDto.getUsername()))) {
             throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Username already exists!");
         }
 
@@ -75,8 +79,4 @@ public class AuthServiceImpl implements AuthService {
         return "Registered successfully!";
     }
 
-    @Override
-    public boolean existByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
 }
