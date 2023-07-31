@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Set;
 
@@ -25,6 +26,7 @@ public class User {
     private String email;
     @NotNull(message = "Password can not be null or empty!")
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

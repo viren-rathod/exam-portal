@@ -20,18 +20,17 @@ import java.security.Principal;
 import java.util.List;
 
 @Slf4j
-@Tag( name = "REST APIs for Authentication" )
+@Tag(name = "REST APIs for Authentication")
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
-
 public class AuthController {
     private AuthService authService;
     private CityService cityService;
     private StateService stateService;
     private UserService userService;
 
-    public AuthController(AuthService authService,CityService cityService,StateService stateService,UserService userService) {
+    public AuthController(AuthService authService, CityService cityService, StateService stateService, UserService userService) {
         this.authService = authService;
         this.stateService = stateService;
         this.cityService = cityService;
@@ -39,35 +38,36 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/login", "/signin"})
-    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto) {
         String token = authService.login(loginDto);
         JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
         jwtAuthResponse.setAccessToken(token);
+        log.info(token);
+        log.info(jwtAuthResponse.toString());
         return ResponseEntity.ok(jwtAuthResponse);
     }
 
     @PostMapping(value = {"/register", "/signup"})
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
-        String response = authService.register(registerDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+        authService.register(registerDto);
+        return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
     @GetMapping("/states")
-    public List<String> getAllStates(){
+    public List<String> getAllStates() {
         List<State> states = stateService.findAllState();
         return states.stream().map(State::getName).toList();
     }
 
     @GetMapping("/cities/{stateId}")
     public List<String> getCitiesByState(@PathVariable int stateId) {
-        List<City> cities = cityService.findCityBYStateId(stateService.findState( stateId));
+        List<City> cities = cityService.findCityBYStateId(stateService.findState(stateId));
         return cities.stream().map(City::getName).toList();
     }
 
     @GetMapping("/getCurrentUser")
     public ResponseEntity<User> getCurrentUser(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        log.info(user.toString());
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
