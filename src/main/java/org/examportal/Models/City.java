@@ -2,7 +2,10 @@ package org.examportal.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -10,10 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "city_master")
-public class City {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int cityId;
+public class City extends BaseEntity {
     private String name;
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)

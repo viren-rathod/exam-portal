@@ -1,19 +1,25 @@
 package org.examportal.Models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "state_master")
-public class State {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int stateId;
+public class State extends BaseEntity {
     private String name;
     @JsonManagedReference
     @OneToMany(mappedBy = "state", fetch = FetchType.EAGER)

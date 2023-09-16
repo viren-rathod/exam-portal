@@ -16,10 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "exam")
-public class Exam {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Exam extends BaseEntity {
     @NotEmpty
     @Column(nullable = false, unique = true)
     private String title;
@@ -39,3 +36,4 @@ public class Exam {
     )
     private Set<Category> categories = new LinkedHashSet<>();
 }
+

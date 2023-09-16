@@ -16,10 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "category")
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Category extends BaseEntity {
     @NotEmpty
     @Column(nullable = false, unique = true)
     private String cName;

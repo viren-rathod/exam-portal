@@ -1,6 +1,9 @@
 package org.examportal.Models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "questions")
-public class Questions {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Questions extends BaseEntity {
+
     private String content;
     @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
