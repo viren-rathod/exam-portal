@@ -1,12 +1,12 @@
-package org.examportal.Models.Exam;
+package org.examportal.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.examportal.Models.BaseEntity;
 
 import java.util.Set;
 
@@ -19,14 +19,9 @@ import java.util.Set;
 public class Category extends BaseEntity {
     @NotEmpty
     @Column(nullable = false, unique = true)
-    private String title;
-
-    private String description;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "question_category",
-            joinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
-    )
+    private String cName;
+    private String cDescription;
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Questions> questions;
 }

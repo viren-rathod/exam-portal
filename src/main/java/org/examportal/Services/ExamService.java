@@ -1,6 +1,7 @@
 package org.examportal.Services;
 
 import org.examportal.DTOs.ExamDto;
+import org.examportal.Models.Exam;
 
 import java.util.Set;
 
