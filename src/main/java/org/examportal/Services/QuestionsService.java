@@ -1,7 +1,7 @@
 package org.examportal.Services;
 
-import org.examportal.Models.Category;
-import org.examportal.Models.Questions;
+import org.examportal.Models.Exam.Category;
+import org.examportal.Models.Exam.Questions;
 
 import java.util.Set;
 
