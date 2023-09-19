@@ -1,7 +1,7 @@
 package org.examportal.Services.Impl;
 
-import org.examportal.Models.Category;
-import org.examportal.Models.Questions;
+import org.examportal.Models.Exam.Category;
+import org.examportal.Models.Exam.Questions;
 import org.examportal.Repositories.QuestionsRepository;
 import org.examportal.Services.QuestionsService;
 import org.springframework.beans.factory.annotation.Autowired;
