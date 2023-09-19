@@ -22,11 +22,13 @@ public class Exam extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String title;
 
-    private String qDescription;
+    private String description;
 
     private String maxMarks;
 
     private String totalQuestions;
+
+    private String examCode;
 
     private Boolean isActive;
 
