@@ -2,7 +2,7 @@ package org.examportal.Services.Impl;
 
 import org.examportal.DTOs.CategoryDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
-import org.examportal.Models.Exam.Exam.Category;
+import org.examportal.Models.Exam.Category;
 import org.examportal.Repositories.CategoryRepository;
 import org.examportal.Services.CategoryService;
 import org.modelmapper.ModelMapper;
