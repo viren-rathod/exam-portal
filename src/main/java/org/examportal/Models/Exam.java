@@ -1,4 +1,4 @@
-package org.examportal.Models.Exam;
+package org.examportal.Models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.examportal.Models.BaseEntity;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -22,13 +21,11 @@ public class Exam extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String title;
 
-    private String description;
+    private String qDescription;
 
     private String maxMarks;
 
     private String totalQuestions;
-
-    private String examCode;
 
     private Boolean isActive;
 
