@@ -1,4 +1,4 @@
-package org.examportal.Models;
+package org.examportal.Models.Exam;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.examportal.Models.BaseEntity;
 
 @Getter
 @Setter
