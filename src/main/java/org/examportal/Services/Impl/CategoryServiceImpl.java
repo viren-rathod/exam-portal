@@ -2,7 +2,7 @@ package org.examportal.Services.Impl;
 
 import org.examportal.DTOs.CategoryDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
-import org.examportal.Models.Category;
+import org.examportal.Models.Exam.Category;
 import org.examportal.Repositories.CategoryRepository;
 import org.examportal.Services.CategoryService;
 import org.modelmapper.ModelMapper;
@@ -25,8 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto addCategory(CategoryDto categoryDto) {
+    public CategoryDto addCategory(CategoryDto categoryDto, String user) {
         Category category = modelMapper.map(categoryDto, Category.class);
+        category.update(user);
         Category savedCategory = categoryRepository.save(category);
         return modelMapper.map(savedCategory, CategoryDto.class);
     }

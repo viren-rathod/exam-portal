@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
@@ -27,8 +28,8 @@ public class CategoryController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody CategoryDto categoryDto) {
-        CategoryDto savedCategory = categoryService.addCategory(categoryDto);
+    public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody CategoryDto categoryDto, Principal principal) {
+        CategoryDto savedCategory = categoryService.addCategory(categoryDto,principal.getName());
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
