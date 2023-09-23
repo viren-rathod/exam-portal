@@ -6,9 +6,9 @@ import java.util.Set;
 
 public interface CategoryService {
 
-    CategoryDto addCategory(CategoryDto category,String user);
+    CategoryDto addCategory(CategoryDto category, String user);
 
-    CategoryDto updateCategory(CategoryDto category);
+    CategoryDto updateCategory(CategoryDto category, String user);
 
     Set<CategoryDto> getCategories();
 

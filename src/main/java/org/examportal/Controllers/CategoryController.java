@@ -4,21 +4,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.examportal.DTOs.CategoryDto;
 import org.examportal.Services.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -29,7 +26,7 @@ public class CategoryController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
     public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody CategoryDto categoryDto, Principal principal) {
-        CategoryDto savedCategory = categoryService.addCategory(categoryDto,principal.getName());
+        CategoryDto savedCategory = categoryService.addCategory(categoryDto, principal.getName());
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
@@ -50,8 +47,8 @@ public class CategoryController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/")
-    public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto category) {
-        return ResponseEntity.ok(categoryService.updateCategory(category));
+    public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto category, Principal principal) {
+        return ResponseEntity.ok(categoryService.updateCategory(category, principal.getName()));
     }
 
     //delete category

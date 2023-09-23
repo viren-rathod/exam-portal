@@ -6,7 +6,6 @@ import org.examportal.Models.Exam.Category;
 import org.examportal.Repositories.CategoryRepository;
 import org.examportal.Services.CategoryService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
@@ -15,9 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
-    private CategoryRepository categoryRepository;
-    private ModelMapper modelMapper;
+    private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository, ModelMapper modelMapper) {
         this.categoryRepository = categoryRepository;
@@ -33,8 +31,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto updateCategory(CategoryDto categoryDto) {
+    public CategoryDto updateCategory(CategoryDto categoryDto, String user) {
         Category category = modelMapper.map(categoryDto, Category.class);
+        categoryRepository.findById(category.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", category.getId()));
+        category.update(user);
         Category savedCategory = categoryRepository.save(category);
         return modelMapper.map(savedCategory, CategoryDto.class);
     }
