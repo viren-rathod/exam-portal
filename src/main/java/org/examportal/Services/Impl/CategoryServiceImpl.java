@@ -41,13 +41,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Set<CategoryDto> getCategories() {
+    public Set<CategoryDto> findAllCategories() {
         Set<Category> categories = new LinkedHashSet<>(categoryRepository.findAll());
         return categories.stream().map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toSet());
     }
 
     @Override
-    public CategoryDto getCategory(Long categoryId) {
+    public CategoryDto findCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
         return modelMapper.map(category, CategoryDto.class);

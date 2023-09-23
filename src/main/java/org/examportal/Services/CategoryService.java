@@ -10,9 +10,9 @@ public interface CategoryService {
 
     CategoryDto updateCategory(CategoryDto category, String user);
 
-    Set<CategoryDto> getCategories();
+    Set<CategoryDto> findAllCategories();
 
-    CategoryDto getCategory(Long categoryId);
+    CategoryDto findCategoryById(Long categoryId);
 
     void deleteCategory(Long categoryId);
 }

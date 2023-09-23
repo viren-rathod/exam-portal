@@ -33,14 +33,14 @@ public class CategoryController {
     //get category
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryDto> getCategory(@PathVariable("categoryId") Long categoryId) {
-        CategoryDto categoryDto = categoryService.getCategory(categoryId);
+        CategoryDto categoryDto = categoryService.findCategoryById(categoryId);
         return ResponseEntity.ok(categoryDto);
     }
 
     //get all categories
     @GetMapping("/")
     public ResponseEntity<Set<CategoryDto>> getCategories() {
-        return ResponseEntity.ok(this.categoryService.getCategories());
+        return ResponseEntity.ok(this.categoryService.findAllCategories());
     }
 
     //update category
