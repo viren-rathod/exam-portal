@@ -1,20 +1,20 @@
 package org.examportal.Services;
 
-import org.examportal.Models.Exam.Category;
+import org.examportal.DTOs.QuestionsDto;
 import org.examportal.Models.Exam.Questions;
 
 import java.util.Set;
 
 public interface QuestionsService {
-    Questions addQuestion(Questions question);
+    Questions addQuestion(QuestionsDto question, String user);
 
-    Questions updateQuestions(Questions question);
+    Questions updateQuestions(QuestionsDto question, String user);
 
-    Set<Questions> getQuestions();
+    Set<Questions> findAllQuestions();
 
-    Questions getQuestion(Long questionId);
+    Questions findByQuestionId(Long questionId);
 
-    Set<Questions> getQuestionsOfCategory(Category category);
+    Set<Questions> findQuestionsByCategoryId(Long categoryId);
 
     void deleteQuestion(Long questionId);
 }

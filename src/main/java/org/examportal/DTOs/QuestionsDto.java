@@ -11,5 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class QuestionsDto {
     private Long id;
-    private String content;
+
+    private String title;
+
+    private String description;
+
+    private Long categoryId;
 }
