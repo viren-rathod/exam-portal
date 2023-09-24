@@ -22,11 +22,4 @@ public class Category extends BaseEntity {
     private String title;
 
     private String description;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "question_category",
-            joinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
-    )
-    private Set<Questions> questions;
 }
