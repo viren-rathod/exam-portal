@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.examportal.DTOs.JWTAuthResponse;
 import org.examportal.DTOs.LoginDto;
 import org.examportal.DTOs.RegisterDto;
+import org.examportal.DTOs.Response;
 import org.examportal.Models.City;
 import org.examportal.Models.State;
 import org.examportal.Models.User;
@@ -38,17 +39,23 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/login", "/signin"})
-    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto) {
-        String token = authService.login(loginDto);
-        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
-        jwtAuthResponse.setAccessToken(token);
-        return ResponseEntity.ok(jwtAuthResponse);
+    public ResponseEntity<Response> login(@RequestBody LoginDto loginDto) {
+        JWTAuthResponse jwtAuthResponse = authService.login(loginDto);
+        Response response = new Response(jwtAuthResponse);
+        response.setResponseCode(HttpStatus.OK);
+        response.setMessage("Login Successfully!");
+        response.setStatus(true);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(value = {"/register", "/signup"})
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<Response> register(@RequestBody RegisterDto registerDto) {
         String res = authService.register(registerDto);
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
+        Response response = new Response();
+        response.setResponseCode(HttpStatus.CREATED);
+        response.setMessage(res);
+        response.setStatus(true);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/states")

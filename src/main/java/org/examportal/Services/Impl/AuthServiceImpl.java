@@ -1,5 +1,6 @@
 package org.examportal.Services.Impl;
 
+import org.examportal.DTOs.JWTAuthResponse;
 import org.examportal.DTOs.LoginDto;
 import org.examportal.DTOs.RegisterDto;
 import org.examportal.Exceptions.ExamAPIException;
@@ -45,12 +46,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(LoginDto loginDto) {
+    public JWTAuthResponse login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return jwtTokenProvider.generateToken(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+        return jwtAuthResponse;
     }
 
     @Override
@@ -76,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        return "{\"response\": \"Registered successfully!\"}";
+        return "Registered successfully!";
     }
 
 }
