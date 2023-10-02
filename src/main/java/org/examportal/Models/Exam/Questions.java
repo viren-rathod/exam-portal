@@ -23,10 +23,10 @@ public class Questions extends BaseEntity {
 
     private String description;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private Set<Options> options;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "question_answer",
             joinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "option_id", referencedColumnName = "id")
@@ -34,7 +34,7 @@ public class Questions extends BaseEntity {
     private Options answer;
 
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "question_category",
             joinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")

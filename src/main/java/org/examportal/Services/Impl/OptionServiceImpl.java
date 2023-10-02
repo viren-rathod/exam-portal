@@ -28,17 +28,18 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public Options create(OptionDto optionDto, String user) {
+    public OptionDto create(OptionDto optionDto, String user) {
         Options option = modelMapper.map(optionDto, Options.class);
         Questions question = questionsRepository.findById(optionDto.getQuestionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", optionDto.getQuestionId()));
         option.setQuestion(question);
         option.update(user);
-        return optionRepository.save(option);
+        Options savedOption = optionRepository.save(option);
+        return modelMapper.map(savedOption, OptionDto.class);
     }
 
     @Override
-    public Options update(OptionDto optionDto, String user) {
+    public OptionDto update(OptionDto optionDto, String user) {
         optionRepository.findById(optionDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Option", "id", optionDto.getId()));
         Options option = modelMapper.map(optionDto, Options.class);
@@ -46,20 +47,22 @@ public class OptionServiceImpl implements OptionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", optionDto.getQuestionId()));
         option.setQuestion(question);
         option.update(user);
-        return optionRepository.save(option);
+        Options savedOption = optionRepository.save(option);
+        return modelMapper.map(savedOption, OptionDto.class);
     }
 
     @Override
-    public Set<Options> findAllByQuestion(Long questionId) {
+    public Set<OptionDto> findAllByQuestion(Long questionId) {
         Questions question = questionsRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
-        return optionRepository.findByQuestion(question);
+        Set<Options> options = optionRepository.findByQuestion(question);
+        return options.stream().map(q -> modelMapper.map(q, OptionDto.class)).collect(Collectors.toSet());
     }
 
     @Override
     public String saveAll(Set<OptionDto> options, String user) {
-        Set<Options> optionsSet = options.stream().map(option -> create(option, user)).collect(Collectors.toSet());
-        return "{\"response\": \"Options Added successfully!\"}";
+        Set<OptionDto> optionsSet = options.stream().map(option -> create(option, user)).collect(Collectors.toSet());
+        return "Options Added successfully!";
     }
 
     @Override
@@ -78,6 +81,6 @@ public class OptionServiceImpl implements OptionService {
         Options option = modelMapper.map(optionDto, Options.class);
         question.setAnswer(option);
         questionsRepository.save(question);
-        return "{\"response\": \"Answer Set successfully!\"}";
+        return "Answer Set successfully!";
     }
 }

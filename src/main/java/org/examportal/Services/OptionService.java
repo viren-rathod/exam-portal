@@ -1,16 +1,15 @@
 package org.examportal.Services;
 
 import org.examportal.DTOs.OptionDto;
-import org.examportal.Models.Exam.Options;
 
 import java.util.Set;
 
 public interface OptionService {
-    Options create(OptionDto optionDto, String user);
+    OptionDto create(OptionDto optionDto, String user);
 
-    Options update(OptionDto optionDto, String user);
+    OptionDto update(OptionDto optionDto, String user);
 
-    Set<Options> findAllByQuestion(Long questionId);
+    Set<OptionDto> findAllByQuestion(Long questionId);
 
     String saveAll(Set<OptionDto> options, String user);
 

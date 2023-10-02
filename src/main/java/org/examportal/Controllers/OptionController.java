@@ -2,8 +2,9 @@ package org.examportal.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.OptionDto;
-import org.examportal.Models.Exam.Options;
+import org.examportal.DTOs.Response;
 import org.examportal.Services.OptionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,44 +26,59 @@ public class OptionController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<Options> addOption(@Valid @RequestBody OptionDto optionDto, Principal principal) {
-        Options options = optionService.create(optionDto, principal.getName());
-        return new ResponseEntity<>(options, HttpStatus.CREATED);
+    public ResponseEntity<BaseResponseDto<OptionDto>> addOption(@Valid @RequestBody OptionDto optionDto, Principal principal) {
+        OptionDto options = optionService.create(optionDto, principal.getName());
+        Response<OptionDto> response = new Response<>(options);
+        response.setResponseCode(HttpStatus.CREATED.value());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/question/{questionId}")
-    public ResponseEntity<Set<Options>> getOptionsByQuestion(@PathVariable Long questionId) {
-        Set<Options> options = optionService.findAllByQuestion(questionId);
-        return ResponseEntity.ok(options);
+    public ResponseEntity<BaseResponseDto<Set<OptionDto>>> getOptionsByQuestion(@PathVariable Long questionId) {
+        Set<OptionDto> options = optionService.findAllByQuestion(questionId);
+        Response<Set<OptionDto>> response = new Response<>(options);
+        response.setResponseCode(options.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        if (options.isEmpty()) response.setMessage("No Content!");
+        return new ResponseEntity<>(response, options.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/")
-    public ResponseEntity<Options> updateOption(@Valid @RequestBody OptionDto optionDto, Principal principal) {
-        return ResponseEntity.ok(optionService.update(optionDto, principal.getName()));
+    public ResponseEntity<BaseResponseDto<OptionDto>> updateOption(@Valid @RequestBody OptionDto optionDto, Principal principal) {
+        OptionDto option = optionService.update(optionDto, principal.getName());
+        Response<OptionDto> response = new Response<>(option);
+        response.setResponseCode(HttpStatus.OK.value());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{optionId}")
-    public ResponseEntity<String> deleteOption(@PathVariable("optionId") Long optionId) {
+    public ResponseEntity<BaseResponseDto<String>> deleteOption(@PathVariable("optionId") Long optionId) {
         optionService.delete(optionId);
-        return ResponseEntity.ok("{\"response\": \"Option deleted successfully!\"}");
+        Response<String> response = new Response<>("Option deleted successfully!");
+        response.setResponseCode(HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
     }
 
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/addAll")
-    public ResponseEntity<String> addAllOption(@Valid @RequestBody Set<OptionDto> optionDtoSet, Principal principal) {
+    public ResponseEntity<BaseResponseDto<String>> addAllOption(@Valid @RequestBody Set<OptionDto> optionDtoSet, Principal principal) {
         String res = optionService.saveAll(optionDtoSet, principal.getName());
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
+        Response<String> response = new Response<>(res);
+        response.setResponseCode(HttpStatus.CREATED.value());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/saveAnswer")
-    public ResponseEntity<String> setAnswer(@Valid @RequestBody OptionDto optionDto) {
-        return ResponseEntity.ok(optionService.saveAnswer(optionDto));
+    public ResponseEntity<BaseResponseDto<String>> setAnswer(@Valid @RequestBody OptionDto optionDto) {
+        String res = optionService.saveAnswer(optionDto);
+        Response<String> response = new Response<>(res);
+        response.setResponseCode(HttpStatus.CREATED.value());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

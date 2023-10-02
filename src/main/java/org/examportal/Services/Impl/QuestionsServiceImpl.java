@@ -10,8 +10,9 @@ import org.examportal.Services.QuestionsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionsServiceImpl implements QuestionsService {
@@ -26,17 +27,18 @@ public class QuestionsServiceImpl implements QuestionsService {
     }
 
     @Override
-    public Questions addQuestion(QuestionsDto questionsDto, String user) {
+    public QuestionsDto addQuestion(QuestionsDto questionsDto, String user) {
         Questions question = modelMapper.map(questionsDto, Questions.class);
         Category category = categoryRepository.findById(questionsDto.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", questionsDto.getCategoryId()));
         question.setCategory(category);
         question.update(user);
-        return questionsRepository.save(question);
+        Questions savedQuestion = questionsRepository.save(question);
+        return modelMapper.map(savedQuestion, QuestionsDto.class);
     }
 
     @Override
-    public Questions updateQuestions(QuestionsDto questionsDto, String user) {
+    public QuestionsDto updateQuestions(QuestionsDto questionsDto, String user) {
         Questions question = modelMapper.map(questionsDto, Questions.class);
         questionsRepository.findById(questionsDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionsDto.getId()));
@@ -44,25 +46,29 @@ public class QuestionsServiceImpl implements QuestionsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", questionsDto.getCategoryId()));
         question.setCategory(category);
         question.update(user);
-        return questionsRepository.save(question);
+        Questions savedQuestion = questionsRepository.save(question);
+        return modelMapper.map(savedQuestion, QuestionsDto.class);
     }
 
     @Override
-    public Set<Questions> findAllQuestions() {
-        return new LinkedHashSet<>(questionsRepository.findAll());
+    public Set<QuestionsDto> findAllQuestions() {
+        List<Questions> allQuestions = questionsRepository.findAll();
+        return allQuestions.stream().map(question -> modelMapper.map(question, QuestionsDto.class)).collect(Collectors.toSet());
     }
 
     @Override
-    public Questions findByQuestionId(Long questionId) {
-        return questionsRepository.findById(questionId)
+    public QuestionsDto findByQuestionId(Long questionId) {
+        Questions questions = questionsRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
+        return modelMapper.map(questions, QuestionsDto.class);
     }
 
     @Override
-    public Set<Questions> findQuestionsByCategoryId(Long categoryId) {
+    public Set<QuestionsDto> findQuestionsByCategoryId(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
-        return questionsRepository.findByCategory(category);
+        Set<Questions> questions = questionsRepository.findByCategory(category);
+        return questions.stream().map(question -> modelMapper.map(question, QuestionsDto.class)).collect(Collectors.toSet());
     }
 
     @Override
