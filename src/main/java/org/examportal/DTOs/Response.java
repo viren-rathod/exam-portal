@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response extends BaseResponseDto {
-    public JWTAuthResponse data;
+public class Response<T> extends BaseResponseDto<T> {
+    private T data;
 }

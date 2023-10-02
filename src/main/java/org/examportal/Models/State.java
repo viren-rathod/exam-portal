@@ -1,6 +1,6 @@
 package org.examportal.Models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "state_master")
 public class State extends BaseEntity {
     private String name;
-    @JsonManagedReference
-    @OneToMany(mappedBy = "state", fetch = FetchType.EAGER)
+    @JsonIgnore
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY)
     private List<City> cities = new ArrayList<>();
 }

@@ -2,10 +2,7 @@ package org.examportal.Controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.examportal.DTOs.JWTAuthResponse;
-import org.examportal.DTOs.LoginDto;
-import org.examportal.DTOs.RegisterDto;
-import org.examportal.DTOs.Response;
+import org.examportal.DTOs.*;
 import org.examportal.Models.City;
 import org.examportal.Models.State;
 import org.examportal.Models.User;
@@ -39,40 +36,54 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/login", "/signin"})
-    public ResponseEntity<Response> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<BaseResponseDto<JWTAuthResponse>> login(@RequestBody LoginDto loginDto) {
         JWTAuthResponse jwtAuthResponse = authService.login(loginDto);
-        Response response = new Response(jwtAuthResponse);
-        response.setResponseCode(HttpStatus.OK);
+        Response<JWTAuthResponse> response = new Response<>(jwtAuthResponse);
+        response.setResponseCode(HttpStatus.OK.value());
         response.setMessage("Login Successfully!");
         response.setStatus(true);
+        response.setToast(true);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping(value = {"/register", "/signup"})
-    public ResponseEntity<Response> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<BaseResponseDto<String>> register(@RequestBody RegisterDto registerDto) {
         String res = authService.register(registerDto);
-        Response response = new Response();
-        response.setResponseCode(HttpStatus.CREATED);
+        Response<String> response = new Response<>(res);
+        response.setResponseCode(HttpStatus.CREATED.value());
         response.setMessage(res);
         response.setStatus(true);
+        response.setToast(true);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/states")
-    public List<String> getAllStates() {
+    public ResponseEntity<BaseResponseDto<List<State>>> getAllStates() {
         List<State> states = stateService.findAllState();
-        return states.stream().map(State::getName).toList();
+        Response<List<State>> response = new Response<>(states);
+        response.setResponseCode(states.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        response.setToast(false);
+        if (states.isEmpty()) response.setMessage("No Content!");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/cities/{stateId}")
-    public List<String> getCitiesByState(@PathVariable int stateId) {
+    public ResponseEntity<BaseResponseDto<List<City>>> getCitiesByState(@PathVariable int stateId) {
         List<City> cities = cityService.findCityBYStateId(stateService.findState(stateId));
-        return cities.stream().map(City::getName).toList();
+        Response<List<City>> response = new Response<>(cities);
+        response.setResponseCode(cities.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        response.setToast(false);
+        if (cities.isEmpty()) response.setMessage("No Content!");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getCurrentUser")
-    public ResponseEntity<User> getCurrentUser(Principal principal) {
+    public ResponseEntity<BaseResponseDto<User>> getCurrentUser(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        Response<User> response = new Response<>(user);
+        response.setResponseCode(user == null ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        response.setToast(false);
+        if (user == null) response.setMessage("No User Found!");
+        return ResponseEntity.ok(response);
     }
 }
