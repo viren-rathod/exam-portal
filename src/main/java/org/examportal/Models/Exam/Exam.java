@@ -32,7 +32,7 @@ public class Exam extends BaseEntity {
 
     private Boolean isActive;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "exam_category",
             joinColumns = @JoinColumn(name = "exam_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
