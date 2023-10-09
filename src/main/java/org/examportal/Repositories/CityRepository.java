@@ -9,5 +9,7 @@ import java.util.Optional;
 
 public interface CityRepository extends JpaRepository<City, Integer> {
     List<City> findByState(Optional<State> stateId);
-//    List<City> findByState(State stateId);
+
+    //    List<City> findByState(State stateId);
+    List<City> findByName(String name);
 }

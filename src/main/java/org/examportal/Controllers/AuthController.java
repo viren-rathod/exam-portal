@@ -86,4 +86,17 @@ public class AuthController {
         if (user == null) response.setMessage("No User Found!");
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/add-state")
+    public String addCityStateData(@RequestBody CityStateDto cityStateDto, Principal principal) {
+        log.info(String.format("addCityStateData() ==> %s", cityStateDto));
+        return stateService.AddCityStateData(cityStateDto, principal.getName());
+    }
+
+    @PostMapping("/add-all-state")
+    public String addAllCityStateData(@RequestBody List<CityStateDto> cityStateDtos, Principal principal) {
+        log.info(String.format("addAllCityStateData() ==> %s", cityStateDtos));
+        return stateService.AddAllCityStateData(cityStateDtos, principal.getName());
+    }
+
 }
