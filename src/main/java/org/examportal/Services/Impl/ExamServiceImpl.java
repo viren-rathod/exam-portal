@@ -6,7 +6,6 @@ import org.examportal.Models.Exam.Exam;
 import org.examportal.Repositories.ExamRepository;
 import org.examportal.Services.ExamService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
@@ -15,9 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ExamServiceImpl implements ExamService {
-    @Autowired
-    private ExamRepository examRepository;
-    private ModelMapper modelMapper;
+    private final ExamRepository examRepository;
+    private final ModelMapper modelMapper;
 
     public ExamServiceImpl(ExamRepository examRepository, ModelMapper modelMapper) {
         this.examRepository = examRepository;

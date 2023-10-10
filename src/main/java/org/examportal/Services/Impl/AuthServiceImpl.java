@@ -20,16 +20,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    private AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
-    private JwtTokenProvider jwtTokenProvider;
-    private UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager,
                            UserRepository userRepository,
@@ -74,7 +75,9 @@ public class AuthServiceImpl implements AuthService {
         user.update(registerDto.getEmail());
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName("USER").get();
+        Optional<Role> opt = roleRepository.findByName("USER");
+        Role userRole = new Role();
+        if (opt.isPresent()) userRole = opt.get();
         roles.add(userRole);
         user.setRoles(roles);
 

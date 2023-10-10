@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Service
 public interface StateService {
-    public List<State> findAllState();
-    public Optional<State> findState(int id);
+    List<State> findAllState();
+
+    Optional<State> findState(int id);
 }
