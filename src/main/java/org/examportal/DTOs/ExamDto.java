@@ -1,6 +1,5 @@
 package org.examportal.DTOs;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

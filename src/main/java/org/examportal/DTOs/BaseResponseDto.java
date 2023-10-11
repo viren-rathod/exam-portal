@@ -1,7 +1,6 @@
 package org.examportal.DTOs;
 
 import lombok.*;
-import org.springframework.http.HttpStatusCode;
 
 @Getter
 @Setter

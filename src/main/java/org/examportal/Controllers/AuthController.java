@@ -23,10 +23,10 @@ import java.util.List;
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
 public class AuthController {
-    private AuthService authService;
-    private CityService cityService;
-    private StateService stateService;
-    private UserService userService;
+    private final AuthService authService;
+    private final CityService cityService;
+    private final StateService stateService;
+    private final UserService userService;
 
     public AuthController(AuthService authService, CityService cityService, StateService stateService, UserService userService) {
         this.authService = authService;

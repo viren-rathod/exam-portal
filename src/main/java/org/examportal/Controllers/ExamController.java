@@ -16,7 +16,7 @@ import java.util.Set;
 @RequestMapping("/api/exam")
 public class ExamController {
     @Autowired
-    private ExamService examService;
+    private final ExamService examService;
 
     public ExamController(ExamService examService) {
         this.examService = examService;
@@ -26,8 +26,8 @@ public class ExamController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<ExamDto> addExam(@Valid  @RequestBody ExamDto examDto) {
-        ExamDto savedExam  = examService.addExam(examDto);
+    public ResponseEntity<ExamDto> addExam(@Valid @RequestBody ExamDto examDto) {
+        ExamDto savedExam = examService.addExam(examDto);
         return new ResponseEntity<>(savedExam, HttpStatus.OK);
     }
 
@@ -38,17 +38,17 @@ public class ExamController {
         return ResponseEntity.ok(examDto);
     }
 
-//    get all categories
+    //    get all categories
     @GetMapping("/")
     public ResponseEntity<Set<ExamDto>> getExams() {
         return ResponseEntity.ok(this.examService.getExams());
     }
 
-//    update category
+    //    update category
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/")
-    public ResponseEntity<ExamDto> updateExam(@Valid  @RequestBody ExamDto exam) {
+    public ResponseEntity<ExamDto> updateExam(@Valid @RequestBody ExamDto exam) {
         return ResponseEntity.ok(examService.updateExam(exam));
     }
 

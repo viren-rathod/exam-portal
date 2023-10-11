@@ -4,7 +4,6 @@ import org.examportal.Models.City;
 import org.examportal.Models.State;
 import org.examportal.Repositories.CityRepository;
 import org.examportal.Services.CityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,7 @@ import java.util.Optional;
 
 @Service
 public class CityServiceImp implements CityService {
-    @Autowired
-    private CityRepository cityRepository;
+    private final CityRepository cityRepository;
 
     public CityServiceImp(CityRepository cityRepository) {
         this.cityRepository = cityRepository;

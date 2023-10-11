@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.QuestionsDto;
 import org.examportal.DTOs.Response;
-import org.examportal.Models.Exam.Questions;
 import org.examportal.Services.QuestionsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

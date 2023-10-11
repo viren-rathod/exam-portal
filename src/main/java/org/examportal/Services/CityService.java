@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Service
 public interface CityService {
-    public List<City> findAllCity();
+    List<City> findAllCity();
 
-    public List<City> findCityBYStateId(Optional<State> stateId);
+    List<City> findCityBYStateId(Optional<State> stateId);
 }
