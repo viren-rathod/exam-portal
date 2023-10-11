@@ -1,9 +1,11 @@
 package org.examportal.Controllers;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.examportal.DTOs.*;
 import org.examportal.Models.City;
+import org.examportal.Models.Role;
 import org.examportal.Models.State;
 import org.examportal.Models.User;
 import org.examportal.Services.AuthService;
@@ -15,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Tag(name = "REST APIs for Authentication")
@@ -77,13 +82,26 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @SecurityRequirement(name = "Bear Authentication")
     @GetMapping("/getCurrentUser")
-    public ResponseEntity<BaseResponseDto<User>> getCurrentUser(Principal principal) {
+    public ResponseEntity<BaseResponseDto<Map<String, Object>>> getCurrentUser(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        Response<User> response = new Response<>(user);
-        response.setResponseCode(user == null ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        response.setToast(false);
-        if (user == null) response.setMessage("No User Found!");
+        Response<Map<String, Object>> response = new Response<>();
+        if (user != null) {
+            Map<String, Object> map = new HashMap<>();
+            response.setData(map);
+            response.setMessage("User found!");
+            response.setResponseCode(HttpStatus.OK.value());
+            response.getData().put("id", user.getId());
+//            response.getData().put("created_at", user.getCreated_at());
+//            response.getData().put("created_by", user.getCreated_by());
+            response.getData().put("username", user.getUsername());
+            response.getData().put("email", user.getEmail());
+            response.getData().put("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        } else {
+            response.setResponseCode(HttpStatus.NO_CONTENT.value());
+            response.setMessage("No User found!");
+        }
         return ResponseEntity.ok(response);
     }
 }
