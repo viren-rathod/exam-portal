@@ -11,4 +11,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Response<T> extends BaseResponseDto<T> {
     private T data;
+    private int length;
+    private boolean isEmpty;
+
+    public Response(T data) {
+        this.data = data;
+    }
+
+    public Response(T data, int length) {
+        this.data = data;
+        this.length = length;
+    }
+
 }

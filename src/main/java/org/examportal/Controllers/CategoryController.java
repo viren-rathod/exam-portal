@@ -47,7 +47,7 @@ public class CategoryController {
     @GetMapping("/")
     public ResponseEntity<BaseResponseDto<Set<CategoryDto>>> getCategories() {
         Set<CategoryDto> allCategories = categoryService.findAllCategories();
-        Response<Set<CategoryDto>> response = new Response<>(allCategories);
+        Response<Set<CategoryDto>> response = new Response<>(allCategories, allCategories.size(), allCategories.isEmpty());
         response.setResponseCode(allCategories.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         if (allCategories.isEmpty()) response.setMessage("No Content!");
         return new ResponseEntity<>(response, allCategories.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);

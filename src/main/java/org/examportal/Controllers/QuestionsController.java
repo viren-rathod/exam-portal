@@ -44,7 +44,7 @@ public class QuestionsController {
     @GetMapping("/")
     public ResponseEntity<BaseResponseDto<Set<QuestionsDto>>> getQuestions() {
         Set<QuestionsDto> allQuestions = questionsService.findAllQuestions();
-        Response<Set<QuestionsDto>> response = new Response<>(allQuestions);
+        Response<Set<QuestionsDto>> response = new Response<>(allQuestions, allQuestions.size(), allQuestions.isEmpty());
         response.setResponseCode(allQuestions.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         if (allQuestions.isEmpty()) response.setMessage("No content!");
         return new ResponseEntity<>(response, allQuestions.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
@@ -53,7 +53,7 @@ public class QuestionsController {
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<BaseResponseDto<Set<QuestionsDto>>> getQuestionsByCategory(@PathVariable Long categoryId) {
         Set<QuestionsDto> questions = questionsService.findQuestionsByCategoryId(categoryId);
-        Response<Set<QuestionsDto>> response = new Response<>(questions);
+        Response<Set<QuestionsDto>> response = new Response<>(questions, questions.size(), questions.isEmpty());
         response.setResponseCode(questions.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         if (questions.isEmpty()) response.setMessage("No content!");
         return new ResponseEntity<>(response, questions.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);

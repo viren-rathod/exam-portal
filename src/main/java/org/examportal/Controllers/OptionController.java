@@ -36,7 +36,7 @@ public class OptionController {
     @GetMapping("/question/{questionId}")
     public ResponseEntity<BaseResponseDto<Set<OptionDto>>> getOptionsByQuestion(@PathVariable Long questionId) {
         Set<OptionDto> options = optionService.findAllByQuestion(questionId);
-        Response<Set<OptionDto>> response = new Response<>(options);
+        Response<Set<OptionDto>> response = new Response<>(options, options.size(), options.isEmpty());
         response.setResponseCode(options.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         if (options.isEmpty()) response.setMessage("No Content!");
         return new ResponseEntity<>(response, options.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);

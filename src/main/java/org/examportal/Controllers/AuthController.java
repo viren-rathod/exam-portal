@@ -65,7 +65,7 @@ public class AuthController {
     @GetMapping("/states")
     public ResponseEntity<BaseResponseDto<List<State>>> getAllStates() {
         List<State> states = stateService.findAllState();
-        Response<List<State>> response = new Response<>(states);
+        Response<List<State>> response = new Response<>(states, states.size(), states.isEmpty());
         response.setResponseCode(states.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         response.setToast(false);
         if (states.isEmpty()) response.setMessage("No Content!");
@@ -75,7 +75,7 @@ public class AuthController {
     @GetMapping("/cities/{stateId}")
     public ResponseEntity<BaseResponseDto<List<City>>> getCitiesByState(@PathVariable int stateId) {
         List<City> cities = cityService.findCityBYStateId(stateService.findState(stateId));
-        Response<List<City>> response = new Response<>(cities);
+        Response<List<City>> response = new Response<>(cities, cities.size(), cities.isEmpty());
         response.setResponseCode(cities.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         response.setToast(false);
         if (cities.isEmpty()) response.setMessage("No Content!");
