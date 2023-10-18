@@ -1,4 +1,4 @@
-package org.examportal.Controllers;
+package org.examportal.Controllers.Exam;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

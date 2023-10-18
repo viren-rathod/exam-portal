@@ -1,10 +1,10 @@
-package org.examportal.Services.Impl;
+package org.examportal.Services.Impl.Exam;
 
-import org.examportal.DTOs.CategoryDto;
+import org.examportal.DTOs.Exam.CategoryDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
 import org.examportal.Models.Exam.Category;
-import org.examportal.Repositories.CategoryRepository;
-import org.examportal.Services.CategoryService;
+import org.examportal.Repositories.Exam.CategoryRepository;
+import org.examportal.Services.Exam.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

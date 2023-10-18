@@ -1,4 +1,4 @@
-package org.examportal.Constants;
+package org.examportal.Constants.Exam;
 
 public class OptionMessages {
     public static final String OPTION_DELETED = "Option deleted successfully!";

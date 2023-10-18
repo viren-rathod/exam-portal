@@ -1,4 +1,4 @@
-package org.examportal.DTOs;
+package org.examportal.DTOs.Exam;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,16 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExamDto {
+public class OptionDto {
     private Long id;
 
     private String title;
 
-    private String qDescription;
-
-    private String maxMarks;
-
-    private String totalQuestions;
-
-    private Boolean isActive;
+    private Long questionId;
 }

@@ -1,10 +1,10 @@
-package org.examportal.Services.Impl;
+package org.examportal.Services.Impl.Exam;
 
-import org.examportal.DTOs.ExamDto;
+import org.examportal.DTOs.Exam.ExamDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
 import org.examportal.Models.Exam.Exam;
-import org.examportal.Repositories.ExamRepository;
-import org.examportal.Services.ExamService;
+import org.examportal.Repositories.Exam.ExamRepository;
+import org.examportal.Services.Exam.ExamService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

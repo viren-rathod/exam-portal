@@ -1,4 +1,4 @@
-package org.examportal.DTOs;
+package org.examportal.DTOs.Exam;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

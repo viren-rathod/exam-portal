@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.examportal.Constants.Status;
 
 import java.util.Set;
 
@@ -33,4 +34,10 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Candidate candidate;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }

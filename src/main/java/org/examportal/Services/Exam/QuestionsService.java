@@ -1,6 +1,6 @@
-package org.examportal.Services;
+package org.examportal.Services.Exam;
 
-import org.examportal.DTOs.QuestionsDto;
+import org.examportal.DTOs.Exam.QuestionsDto;
 
 import java.util.Set;
 

@@ -1,13 +1,13 @@
-package org.examportal.Controllers;
+package org.examportal.Controllers.Exam;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.examportal.Constants.QuestionMessages;
+import org.examportal.Constants.Exam.QuestionMessages;
 import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.BaseResponseDto;
-import org.examportal.DTOs.QuestionsDto;
+import org.examportal.DTOs.Exam.QuestionsDto;
 import org.examportal.DTOs.Response;
-import org.examportal.Services.QuestionsService;
+import org.examportal.Services.Exam.QuestionsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

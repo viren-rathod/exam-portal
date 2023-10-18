@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
         user.update(registerDto.getEmail());
 
         Set<Role> roles = new HashSet<>();
-        Optional<Role> opt = roleRepository.findByName(String.valueOf(UserRole.USER));
+        Optional<Role> opt = roleRepository.findByName(UserRole.USER);
         Role userRole = new Role();
         if (opt.isPresent()) userRole = opt.get();
         roles.add(userRole);

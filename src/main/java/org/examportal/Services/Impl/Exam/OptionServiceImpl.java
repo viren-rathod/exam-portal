@@ -1,14 +1,14 @@
-package org.examportal.Services.Impl;
+package org.examportal.Services.Impl.Exam;
 
 import lombok.extern.slf4j.Slf4j;
-import org.examportal.Constants.OptionMessages;
-import org.examportal.DTOs.OptionDto;
+import org.examportal.Constants.Exam.OptionMessages;
+import org.examportal.DTOs.Exam.OptionDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
 import org.examportal.Models.Exam.Options;
 import org.examportal.Models.Exam.Questions;
-import org.examportal.Repositories.OptionRepository;
-import org.examportal.Repositories.QuestionsRepository;
-import org.examportal.Services.OptionService;
+import org.examportal.Repositories.Exam.OptionRepository;
+import org.examportal.Repositories.Exam.QuestionsRepository;
+import org.examportal.Services.Exam.OptionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

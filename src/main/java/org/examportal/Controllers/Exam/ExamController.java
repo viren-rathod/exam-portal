@@ -1,10 +1,10 @@
-package org.examportal.Controllers;
+package org.examportal.Controllers.Exam;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.examportal.Constants.ExamMessages;
-import org.examportal.DTOs.ExamDto;
-import org.examportal.Services.ExamService;
+import org.examportal.Constants.Exam.ExamMessages;
+import org.examportal.DTOs.Exam.ExamDto;
+import org.examportal.Services.Exam.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

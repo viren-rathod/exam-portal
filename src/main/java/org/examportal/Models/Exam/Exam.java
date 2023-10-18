@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.examportal.Constants.Status;
 import org.examportal.Models.BaseEntity;
+import org.examportal.Models.Candidate;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -30,7 +32,8 @@ public class Exam extends BaseEntity {
 
     private String examCode;
 
-    private Boolean isActive;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "exam_category",
@@ -38,5 +41,8 @@ public class Exam extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
     )
     private Set<Category> categories = new LinkedHashSet<>();
+
+    @OneToOne(mappedBy = "exam", fetch = FetchType.LAZY)
+    private Candidate candidate;
 }
 
