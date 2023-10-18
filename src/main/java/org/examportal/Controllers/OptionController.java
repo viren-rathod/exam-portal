@@ -2,6 +2,8 @@ package org.examportal.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.examportal.Constants.OptionMessages;
+import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.OptionDto;
 import org.examportal.DTOs.Response;
@@ -38,7 +40,7 @@ public class OptionController {
         Set<OptionDto> options = optionService.findAllByQuestion(questionId);
         Response<Set<OptionDto>> response = new Response<>(options, options.size(), options.isEmpty());
         response.setResponseCode(options.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (options.isEmpty()) response.setMessage("No Content!");
+        if (options.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         return new ResponseEntity<>(response, options.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -57,7 +59,7 @@ public class OptionController {
     @DeleteMapping("/{optionId}")
     public ResponseEntity<BaseResponseDto<String>> deleteOption(@PathVariable("optionId") Long optionId) {
         optionService.delete(optionId);
-        Response<String> response = new Response<>("Option deleted successfully!");
+        Response<String> response = new Response<>(OptionMessages.OPTION_DELETED);
         response.setResponseCode(HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }

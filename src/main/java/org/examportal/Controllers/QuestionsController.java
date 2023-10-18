@@ -2,6 +2,8 @@ package org.examportal.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.examportal.Constants.QuestionMessages;
+import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.QuestionsDto;
 import org.examportal.DTOs.Response;
@@ -46,7 +48,7 @@ public class QuestionsController {
         Set<QuestionsDto> allQuestions = questionsService.findAllQuestions();
         Response<Set<QuestionsDto>> response = new Response<>(allQuestions, allQuestions.size(), allQuestions.isEmpty());
         response.setResponseCode(allQuestions.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (allQuestions.isEmpty()) response.setMessage("No content!");
+        if (allQuestions.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         return new ResponseEntity<>(response, allQuestions.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -55,7 +57,7 @@ public class QuestionsController {
         Set<QuestionsDto> questions = questionsService.findQuestionsByCategoryId(categoryId);
         Response<Set<QuestionsDto>> response = new Response<>(questions, questions.size(), questions.isEmpty());
         response.setResponseCode(questions.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (questions.isEmpty()) response.setMessage("No content!");
+        if (questions.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         return new ResponseEntity<>(response, questions.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -74,7 +76,7 @@ public class QuestionsController {
     @DeleteMapping("/{questionId}")
     public ResponseEntity<BaseResponseDto<String>> deleteQuestion(@PathVariable("questionId") Long questionId) {
         questionsService.deleteQuestion(questionId);
-        Response<String> response = new Response<>("Question deleted successfully!");
+        Response<String> response = new Response<>(QuestionMessages.QUESTION_DELETED);
         response.setResponseCode(HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }

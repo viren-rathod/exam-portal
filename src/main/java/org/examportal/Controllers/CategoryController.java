@@ -2,6 +2,8 @@ package org.examportal.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.examportal.Constants.CategoryMessages;
+import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.CategoryDto;
 import org.examportal.DTOs.Response;
@@ -49,7 +51,7 @@ public class CategoryController {
         Set<CategoryDto> allCategories = categoryService.findAllCategories();
         Response<Set<CategoryDto>> response = new Response<>(allCategories, allCategories.size(), allCategories.isEmpty());
         response.setResponseCode(allCategories.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (allCategories.isEmpty()) response.setMessage("No Content!");
+        if (allCategories.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         return new ResponseEntity<>(response, allCategories.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -70,7 +72,7 @@ public class CategoryController {
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<BaseResponseDto<String>> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         categoryService.deleteCategory(categoryId);
-        Response<String> response = new Response<>("Category deleted successfully!");
+        Response<String> response = new Response<>(CategoryMessages.CATEGORY_DELETED);
         response.setResponseCode(HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }

@@ -1,6 +1,7 @@
 package org.examportal.Services.Impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.examportal.Constants.OptionMessages;
 import org.examportal.DTOs.OptionDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
 import org.examportal.Models.Exam.Options;
@@ -62,7 +63,7 @@ public class OptionServiceImpl implements OptionService {
     @Override
     public String saveAll(Set<OptionDto> options, String user) {
         Set<OptionDto> optionsSet = options.stream().map(option -> create(option, user)).collect(Collectors.toSet());
-        return "Options Added successfully!";
+        return OptionMessages.OPTION_ADDED;
     }
 
     @Override
@@ -81,6 +82,6 @@ public class OptionServiceImpl implements OptionService {
         Options option = modelMapper.map(optionDto, Options.class);
         question.setAnswer(option);
         questionsRepository.save(question);
-        return "Answer Set successfully!";
+        return OptionMessages.ANSWER_SET;
     }
 }

@@ -1,5 +1,7 @@
 package org.examportal.Services.Impl;
 
+import org.examportal.Constants.UserMessages;
+import org.examportal.Constants.UserRole;
 import org.examportal.DTOs.JWTAuthResponse;
 import org.examportal.DTOs.LoginDto;
 import org.examportal.DTOs.RegisterDto;
@@ -61,11 +63,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterDto registerDto) {
         if (Boolean.TRUE.equals(userService.existByUsername(registerDto.getUsername()))) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Username already exists!");
+            throw new ExamAPIException(HttpStatus.BAD_REQUEST, UserMessages.USER_EXIST);
         }
 
         if (Boolean.TRUE.equals(userRepository.existsByEmail(registerDto.getEmail()))) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, "E - mail already exists!");
+            throw new ExamAPIException(HttpStatus.BAD_REQUEST, UserMessages.EMAIL_EXIST);
         }
 
         User user = new User();
@@ -75,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
         user.update(registerDto.getEmail());
 
         Set<Role> roles = new HashSet<>();
-        Optional<Role> opt = roleRepository.findByName("USER");
+        Optional<Role> opt = roleRepository.findByName(String.valueOf(UserRole.USER));
         Role userRole = new Role();
         if (opt.isPresent()) userRole = opt.get();
         roles.add(userRole);
@@ -83,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        return "Registered successfully!";
+        return UserMessages.REGISTERED;
     }
 
 }

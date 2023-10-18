@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.examportal.Constants.AuthMessages;
 import org.examportal.Exceptions.ExamAPIException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -56,13 +57,13 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Invalid Token!");
+            throw new ExamAPIException(HttpStatus.BAD_REQUEST, AuthMessages.INVALID_TOKEN);
         } catch (ExpiredJwtException ex) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Token Expired!");
+            throw new ExamAPIException(HttpStatus.BAD_REQUEST, AuthMessages.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException ex) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Unsupported token!");
+            throw new ExamAPIException(HttpStatus.BAD_REQUEST, AuthMessages.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException ex) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, "Token is empty!");
+            throw new ExamAPIException(HttpStatus.BAD_REQUEST, AuthMessages.EMPTY_TOKEN);
         }
     }
 

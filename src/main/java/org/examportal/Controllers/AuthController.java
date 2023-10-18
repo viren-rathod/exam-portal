@@ -3,6 +3,7 @@ package org.examportal.Controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.*;
 import org.examportal.Models.City;
 import org.examportal.Models.Role;
@@ -45,7 +46,7 @@ public class AuthController {
         JWTAuthResponse jwtAuthResponse = authService.login(loginDto);
         Response<JWTAuthResponse> response = new Response<>(jwtAuthResponse);
         response.setResponseCode(HttpStatus.OK.value());
-        response.setMessage("Login Successfully!");
+        response.setMessage(UserMessages.LOGGED);
         response.setStatus(true);
         response.setToast(true);
         return ResponseEntity.ok(response);
@@ -68,7 +69,7 @@ public class AuthController {
         Response<List<State>> response = new Response<>(states, states.size(), states.isEmpty());
         response.setResponseCode(states.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         response.setToast(false);
-        if (states.isEmpty()) response.setMessage("No Content!");
+        if (states.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         return ResponseEntity.ok(response);
     }
 
@@ -78,7 +79,7 @@ public class AuthController {
         Response<List<City>> response = new Response<>(cities, cities.size(), cities.isEmpty());
         response.setResponseCode(cities.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         response.setToast(false);
-        if (cities.isEmpty()) response.setMessage("No Content!");
+        if (cities.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         return ResponseEntity.ok(response);
     }
 
@@ -90,7 +91,7 @@ public class AuthController {
         if (user != null) {
             Map<String, Object> map = new HashMap<>();
             response.setData(map);
-            response.setMessage("User found!");
+            response.setMessage(UserMessages.USER_FOUND);
             response.setResponseCode(HttpStatus.OK.value());
             response.getData().put("id", user.getId());
 //            response.getData().put("created_at", user.getCreated_at());
@@ -100,7 +101,7 @@ public class AuthController {
             response.getData().put("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
         } else {
             response.setResponseCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage("No User found!");
+            response.setMessage(UserMessages.USER_NOT_FOUND);
         }
         return ResponseEntity.ok(response);
     }

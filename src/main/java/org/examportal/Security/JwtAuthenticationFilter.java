@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.examportal.Constants.AuthMessages;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // get username from token
             String username = jwtTokenProvider.getUsername(token);
-            //  System.out.println("\n\n"+username);
 
             // load the user associated with token
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -54,11 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            //  System.out.println("\n\n"+bearerToken.substring(7));
+        String bearerToken = request.getHeader(AuthMessages.AUTHORIZATION);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(AuthMessages.BEARER))
             return bearerToken.substring(7);
-        }
         return null;
     }
 }

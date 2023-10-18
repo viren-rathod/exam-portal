@@ -2,6 +2,7 @@ package org.examportal.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.examportal.Constants.ExamMessages;
 import org.examportal.DTOs.ExamDto;
 import org.examportal.Services.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,6 @@ public class ExamController {
     @DeleteMapping("/{examId}")
     public ResponseEntity<String> deleteExam(@PathVariable("examId") Long examId) {
         examService.deleteExam(examId);
-        return ResponseEntity.ok("Exam deleted successfully!");
+        return ResponseEntity.ok(ExamMessages.EXAM_DELETED);
     }
 }
