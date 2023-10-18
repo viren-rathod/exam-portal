@@ -14,11 +14,13 @@ public class ExamDto {
 
     private String title;
 
-    private String qDescription;
+    private String description;
 
     private String maxMarks;
 
     private String totalQuestions;
 
     private Boolean isActive;
+
+    private Long examTime;
 }

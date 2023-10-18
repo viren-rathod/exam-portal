@@ -26,6 +26,8 @@ public class Exam extends BaseEntity {
 
     private String description;
 
+    private Long examTime;
+
     private String maxMarks;
 
     private String totalQuestions;

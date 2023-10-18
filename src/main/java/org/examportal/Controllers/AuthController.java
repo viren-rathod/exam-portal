@@ -1,27 +1,19 @@
-package org.examportal.Controllers.Exam;
+package org.examportal.Controllers;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.*;
 import org.examportal.Models.City;
-import org.examportal.Models.Role;
 import org.examportal.Models.State;
-import org.examportal.Models.User;
 import org.examportal.Services.AuthService;
 import org.examportal.Services.CityService;
 import org.examportal.Services.StateService;
-import org.examportal.Services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Tag(name = "REST APIs for Authentication")
@@ -32,13 +24,11 @@ public class AuthController {
     private final AuthService authService;
     private final CityService cityService;
     private final StateService stateService;
-    private final UserService userService;
 
-    public AuthController(AuthService authService, CityService cityService, StateService stateService, UserService userService) {
+    public AuthController(AuthService authService, CityService cityService, StateService stateService) {
         this.authService = authService;
         this.stateService = stateService;
         this.cityService = cityService;
-        this.userService = userService;
     }
 
     @PostMapping(value = {"/login", "/signin"})
@@ -83,26 +73,4 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @SecurityRequirement(name = "Bear Authentication")
-    @GetMapping("/getCurrentUser")
-    public ResponseEntity<BaseResponseDto<Map<String, Object>>> getCurrentUser(Principal principal) {
-        User user = userService.findByEmail(principal.getName());
-        Response<Map<String, Object>> response = new Response<>();
-        if (user != null) {
-            Map<String, Object> map = new HashMap<>();
-            response.setData(map);
-            response.setMessage(UserMessages.USER_FOUND);
-            response.setResponseCode(HttpStatus.OK.value());
-            response.getData().put("id", user.getId());
-//            response.getData().put("created_at", user.getCreated_at());
-//            response.getData().put("created_by", user.getCreated_by());
-            response.getData().put("username", user.getUsername());
-            response.getData().put("email", user.getEmail());
-            response.getData().put("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
-        } else {
-            response.setResponseCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage(UserMessages.USER_NOT_FOUND);
-        }
-        return ResponseEntity.ok(response);
-    }
 }

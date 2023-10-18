@@ -8,4 +8,5 @@ public class UserMessages {
     public static final String REGISTERED = "Registered successfully!";
     public static final String LOGGED = "Login Successfully!";
     public static final String NO_CONTENT = "No Content!";
+    public static final String CANDIDATE_SAVED = "Candidate Saved Successfully!";
 }

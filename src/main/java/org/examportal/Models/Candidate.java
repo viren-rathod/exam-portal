@@ -29,21 +29,21 @@ public class Candidate extends BaseEntity {
 
     private Long collegeId;
 
-    private String enrollment_number;
+    private String enrollmentNumber;
 
-    private String contact_number;
+    private String contactNumber;
 
-    private Long ssc_percentage;
+    private Long sscPercentage;
 
-    private Long hsc_percentage;
+    private Long hscPercentage;
 
     private Long cgpa;
 
     @Enumerated(EnumType.STRING)
     private Status candidate_status;
 
-    private LocalDateTime exam_start_time;
+    private LocalDateTime examStartTime;
 
-    private LocalDateTime exam_end_time;
+    private LocalDateTime examEndTime;
 
 }
