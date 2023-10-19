@@ -27,7 +27,9 @@ public class Candidate extends BaseEntity {
 
     private String email;
 
-    private Long collegeId;
+    @OneToOne
+    @JoinColumn(name = "college_id")
+    private College college;
 
     private String enrollmentNumber;
 
