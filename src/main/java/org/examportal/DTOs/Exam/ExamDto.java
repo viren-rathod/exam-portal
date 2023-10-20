@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.examportal.Constants.Status;
 
 @Getter
 @Setter
@@ -20,7 +21,9 @@ public class ExamDto {
 
     private String totalQuestions;
 
-    private Boolean isActive;
+    private String examCode;
+
+    private Status status;
 
     private Long examTime;
 }

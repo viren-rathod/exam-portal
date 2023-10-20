@@ -1,6 +1,7 @@
 package org.examportal.DTOs;
 
 import lombok.*;
+import org.examportal.Constants.Status;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import lombok.*;
 public abstract class BaseResponseDto<T> {
     private String message;
     private int responseCode;
-    private boolean status;
+    private Status status;
     private boolean toast;
     private T data;
 }
