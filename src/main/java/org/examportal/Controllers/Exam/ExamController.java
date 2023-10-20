@@ -15,6 +15,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/exam")
+@CrossOrigin("*")
 public class ExamController {
     @Autowired
     private final ExamService examService;

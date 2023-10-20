@@ -1,5 +1,6 @@
 package org.examportal.Services.Impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.examportal.DTOs.CandidateDto;
 import org.examportal.DTOs.CollegeDto;
 import org.examportal.DTOs.Exam.ExamDto;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
+@Slf4j
 @Service
 public class CandidateServiceImpl implements CandidateService {
     private final CandidateRepository candidateRepository;
@@ -35,6 +37,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate create(CandidateDto candidateDto, String user) {
+        log.info(String.format("create - start %s", candidateDto));
         User newUser = userService.findByEmail(candidateDto.getUsername());
         ExamDto examDto = examService.getExam(candidateDto.getExamId());
         Exam exam = modelMapper.map(examDto, Exam.class);
@@ -55,6 +58,7 @@ public class CandidateServiceImpl implements CandidateService {
         candidate.setExamEndTime(new Timestamp(System.currentTimeMillis()).toLocalDateTime().plusHours(exam.getExamTime()));
 
         candidateRepository.save(candidate);
+        log.info(String.format("create - end %s", candidate));
         return candidate;
     }
 }

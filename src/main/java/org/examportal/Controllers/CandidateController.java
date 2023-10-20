@@ -3,6 +3,7 @@ package org.examportal.Controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.CandidateDto;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Tag(name = "REST APIs for Candidate")
 @RestController
 @RequestMapping("/api/user")
@@ -39,17 +41,20 @@ public class CandidateController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
     public ResponseEntity<BaseResponseDto<String>> addCandidate(@Valid @RequestBody CandidateDto candidateDto, Principal principal) {
+        log.info(String.format("addCandidate() - start %s", candidateDto));
         candidateService.create(candidateDto, principal.getName());
         Response<String> response = new Response<>(null);
         response.setEmpty(false);
         response.setResponseCode(HttpStatus.CREATED.value());
         response.setMessage(UserMessages.CANDIDATE_SAVED);
+        log.info("addCandidate() - end");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @SecurityRequirement(name = "Bear Authentication")
     @GetMapping("/getCurrentUser")
     public ResponseEntity<BaseResponseDto<Map<String, Object>>> getCurrentUser(Principal principal) {
+        log.info(String.format("getCurrentUser() - start %s", principal.getName()));
         User user = userService.findByEmail(principal.getName());
         Response<Map<String, Object>> response = new Response<>();
         if (user != null) {
@@ -67,6 +72,7 @@ public class CandidateController {
             response.setResponseCode(HttpStatus.NO_CONTENT.value());
             response.setMessage(UserMessages.USER_NOT_FOUND);
         }
+        log.info(String.format("getCurrentUser() - end %s", user));
         return ResponseEntity.ok(response);
     }
 }
