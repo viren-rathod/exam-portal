@@ -1,10 +1,7 @@
 package org.examportal.Models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.examportal.Constants.Status;
 import org.examportal.Models.Exam.Exam;
 
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "candidates")
+@ToString
 public class Candidate extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id")

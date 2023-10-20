@@ -1,5 +1,6 @@
 package org.examportal.Services.Impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.CollegeDto;
 import org.examportal.Models.College;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CollegeServiceImpl implements CollegeService {
 
@@ -47,13 +49,17 @@ public class CollegeServiceImpl implements CollegeService {
 
     @Override
     public CollegeDto findById(Long id) {
+        log.info(String.format("findById - start %d", id));
         Optional<College> optionalCollege = collegeRepository.findById(id);
+        log.info(String.format("findById - end %s", optionalCollege.orElse(null)));
         return optionalCollege.map(college -> modelMapper.map(college, CollegeDto.class)).orElse(null);
     }
 
     @Override
     public Set<CollegeDto> findAll() {
+        log.info("findAll - start");
         List<College> colleges = collegeRepository.findAll();
+        log.info(String.format("findAll - end %s", colleges));
         return colleges.stream().map(college -> modelMapper.map(college, CollegeDto.class)).collect(Collectors.toSet());
     }
 }

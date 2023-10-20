@@ -12,6 +12,8 @@ import org.examportal.Models.Role;
 import org.examportal.Models.User;
 import org.examportal.Services.CandidateService;
 import org.examportal.Services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,6 +53,32 @@ public class CandidateController {
         log.info("addCandidate() - end");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    //get all categories
+    @GetMapping("/")
+    public ResponseEntity<BaseResponseDto<Set<CandidateDto>>> getCandidates() {
+        log.info("getCandidates() - start");
+        Set<CandidateDto> allCandidates = candidateService.findAll();
+        Response<Set<CandidateDto>> response = new Response<>(allCandidates, allCandidates.size(), allCandidates.isEmpty());
+        response.setResponseCode(allCandidates.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        if (allCandidates.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        log.info(String.format("getCandidates() - end %s ", allCandidates));
+        return new ResponseEntity<>(response, allCandidates.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
+
+    //get categories with Pagination
+    @GetMapping("/paginated")
+    public ResponseEntity<Response<Page<CandidateDto>>> getPaginatedCandidates(@RequestParam int page, @RequestParam int size) {
+        log.info(String.format("getPaginatedCandidates() - start %d %d", page, size));
+        Page<CandidateDto> paginated = candidateService.findPaginated(PageRequest.of(page, size));
+        Response<Page<CandidateDto>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
+        response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        if (response.getData().isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        log.info(String.format("getPaginatedCandidates() - end %s", paginated.getContent()));
+        return new ResponseEntity<>(response, response.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
 
     @SecurityRequirement(name = "Bear Authentication")
     @GetMapping("/getCurrentUser")

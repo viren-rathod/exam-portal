@@ -14,9 +14,14 @@ import org.examportal.Services.CollegeService;
 import org.examportal.Services.Exam.ExamService;
 import org.examportal.Services.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -38,7 +43,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Candidate create(CandidateDto candidateDto, String user) {
         log.info(String.format("create - start %s", candidateDto));
-        User newUser = userService.findByEmail(candidateDto.getUsername());
+        User newUser = userService.findByEmail(candidateDto.getEmail());
         ExamDto examDto = examService.getExam(candidateDto.getExamId());
         Exam exam = modelMapper.map(examDto, Exam.class);
         CollegeDto collegeDto = collegeService.findById(candidateDto.getCollegeId());
@@ -60,5 +65,21 @@ public class CandidateServiceImpl implements CandidateService {
         candidateRepository.save(candidate);
         log.info(String.format("create - end %s", candidate));
         return candidate;
+    }
+
+    @Override
+    public Set<CandidateDto> findAll() {
+        log.info("findAll - start ");
+        List<Candidate> candidates = candidateRepository.findAll();
+        log.info(String.format("findAll - end %s", candidates));
+        return candidates.stream().map(candidate -> modelMapper.map(candidate, CandidateDto.class)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Page<CandidateDto> findPaginated(Pageable pageable) {
+        log.info(String.format("findPaginated - start %s", pageable));
+        Page<Candidate> page = candidateRepository.findAll(pageable);
+        log.info(String.format("findPaginated - end %s", page));
+        return page.map(candidate -> modelMapper.map(candidate, CandidateDto.class));
     }
 }

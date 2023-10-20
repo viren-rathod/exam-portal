@@ -58,9 +58,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<CategoryDto> findPaginated(Pageable pageable) {
-        log.info("findPaginated - start");
+        log.info(String.format("findPaginated - start %s", pageable));
         Page<Category> page = categoryRepository.findAll(pageable);
-        log.info("findPaginated - end");
+        log.info(String.format("findPaginated - end %s", page));
         return page.map(category -> modelMapper.map(category, CategoryDto.class));
     }
 

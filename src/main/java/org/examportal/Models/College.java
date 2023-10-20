@@ -1,13 +1,7 @@
 package org.examportal.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Setter
 @Getter
@@ -15,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "college_master")
+@ToString
 public class College extends BaseEntity {
     private String name;
 
