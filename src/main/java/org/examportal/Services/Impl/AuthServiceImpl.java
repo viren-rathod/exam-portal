@@ -1,5 +1,6 @@
 package org.examportal.Services.Impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.examportal.Constants.UserMessages;
 import org.examportal.Constants.UserRole;
 import org.examportal.DTOs.JWTAuthResponse;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
@@ -50,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JWTAuthResponse login(LoginDto loginDto) {
+        log.info(String.format("login - start %s", loginDto));
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword()));
 
@@ -57,11 +60,13 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenProvider.generateToken(authentication);
         JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
         jwtAuthResponse.setAccessToken(token);
+        log.info("login - end");
         return jwtAuthResponse;
     }
 
     @Override
     public String register(RegisterDto registerDto) {
+        log.info(String.format("register - start %s", registerDto));
         if (Boolean.TRUE.equals(userService.existByUsername(registerDto.getUsername()))) {
             throw new ExamAPIException(HttpStatus.BAD_REQUEST, UserMessages.USER_EXIST);
         }
@@ -84,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
 
         userRepository.save(user);
-
+        log.info(String.format("register - end %s ", user));
         return UserMessages.REGISTERED;
     }
 
