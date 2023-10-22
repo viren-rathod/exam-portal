@@ -40,7 +40,7 @@ public class Candidate extends BaseEntity {
     private Long cgpa;
 
     @Enumerated(EnumType.STRING)
-    private Status candidate_status;
+    private Status candidateStatus;
 
     private LocalDateTime examStartTime;
 
