@@ -2,7 +2,10 @@ package org.examportal.Models.Exam;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.examportal.Constants.Status;
 import org.examportal.Models.BaseEntity;
 import org.examportal.Models.Candidate;

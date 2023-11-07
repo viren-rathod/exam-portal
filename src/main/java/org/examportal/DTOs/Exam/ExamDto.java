@@ -1,9 +1,10 @@
 package org.examportal.DTOs.Exam;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.examportal.Constants.Status;
-
-import java.util.Set;
 
 @Getter
 @Setter
@@ -25,6 +26,4 @@ public class ExamDto {
     private Status status;
 
     private Long examTime;
-
-    private Set<Long> categoryList;
 }
