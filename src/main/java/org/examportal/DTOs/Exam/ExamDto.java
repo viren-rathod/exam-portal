@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.examportal.Constants.Status;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,9 +23,9 @@ public class ExamDto {
 
     private String totalQuestions;
 
-    private String examCode;
-
     private Status status;
 
     private Long examTime;
+
+    private List<Long> categories;
 }
