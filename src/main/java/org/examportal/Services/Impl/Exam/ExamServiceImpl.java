@@ -5,10 +5,8 @@ import org.examportal.DTOs.Exam.ExamDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
 import org.examportal.Models.Exam.Category;
 import org.examportal.Models.Exam.Exam;
-import org.examportal.Models.Exam.Questions;
 import org.examportal.Repositories.Exam.CategoryRepository;
 import org.examportal.Repositories.Exam.ExamRepository;
-import org.examportal.Repositories.Exam.QuestionsRepository;
 import org.examportal.Services.Exam.ExamService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -25,14 +23,13 @@ import java.util.stream.Collectors;
 @Service
 public class ExamServiceImpl implements ExamService {
     private final ExamRepository examRepository;
+
     private final CategoryRepository categoryRepository;
-    private final QuestionsRepository questionRepository;
     private final ModelMapper modelMapper;
 
-    public ExamServiceImpl(ExamRepository examRepository, CategoryRepository categoryRepository, QuestionsRepository questionRepository, ModelMapper modelMapper) {
+    public ExamServiceImpl(ExamRepository examRepository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
         this.examRepository = examRepository;
         this.categoryRepository = categoryRepository;
-        this.questionRepository = questionRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -41,10 +38,9 @@ public class ExamServiceImpl implements ExamService {
     public ExamDto addExam(ExamDto exam, String user) {
         log.info(String.format("addExam - start %s", exam));
         List<Category> categoryList = categoryRepository.findAllById(exam.getCategoryList());
-        List<Questions> questionsList = questionRepository.findAllById(exam.getQuestionList());
+        log.info(String.format("categoryList--> - start %s", categoryList));
         Exam savedExam = modelMapper.map(exam, Exam.class);
         savedExam.setCategories(new HashSet<>(categoryList));
-        savedExam.setQuestions(new HashSet<>(questionsList));
         savedExam.update(user);
         examRepository.save(savedExam);
         log.info(String.format("addExam - start %s", savedExam));
