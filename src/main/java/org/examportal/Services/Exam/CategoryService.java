@@ -1,7 +1,6 @@
 package org.examportal.Services.Exam;
 
 import org.examportal.DTOs.Exam.CategoryDto;
-import org.examportal.DTOs.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,7 +14,7 @@ public interface CategoryService {
 
     Set<CategoryDto> findAllCategories();
 
-    Page<CategoryDto> findPaginated(Pageable pageable);
+    Page<CategoryDto> findPaginated(Pageable pageable, String searchData);
 
     CategoryDto findCategoryById(Long categoryId);
 

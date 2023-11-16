@@ -67,9 +67,9 @@ public class QuestionsServiceImpl implements QuestionsService {
     }
 
     @Override
-    public Page<QuestionsDto> findPaginated(Pageable pageable) {
-        log.info(String.format("findPaginated - start %s", pageable));
-        Page<Questions> page = questionsRepository.findAll(pageable);
+    public Page<QuestionsDto> findPaginated(Pageable pageable, String searchData) {
+        log.info(String.format("findPaginated - start %s %s", pageable, searchData));
+        Page<Questions> page = questionsRepository.findAllWithFilters(searchData, pageable);
         log.info(String.format("findPaginated - end %s", page));
         return page.map(question -> modelMapper.map(question, QuestionsDto.class));
     }

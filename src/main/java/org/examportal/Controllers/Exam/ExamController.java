@@ -11,6 +11,8 @@ import org.examportal.DTOs.Response;
 import org.examportal.Services.Exam.ExamService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -68,9 +70,15 @@ public class ExamController {
 
     //get exam with Pagination
     @GetMapping("/paginated")
-    public ResponseEntity<Response<Page<ExamDto>>> getPaginatedExams(@RequestParam int page, @RequestParam int size) {
-        log.info(String.format("getPaginatedExams() - start %d %d", page, size));
-        Page<ExamDto> paginated = examService.findPaginated(PageRequest.of(page, size));
+    public ResponseEntity<Response<Page<ExamDto>>> getPaginatedExams(@RequestParam int page,
+                                                                     @RequestParam int size,
+                                                                     @RequestParam String sortOrder,
+                                                                     @RequestParam String sortField,
+                                                                     @RequestParam(required = false) String searchData) {
+        log.info(String.format("getPaginatedExams() - start %d %d %s %s %s", page, size, sortOrder, sortField, searchData));
+        Sort sort = sortOrder.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<ExamDto> paginated = examService.findPaginated(pageable, searchData);
         Response<Page<ExamDto>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
         response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         if (response.getData().isEmpty()) response.setMessage(UserMessages.NO_CONTENT);

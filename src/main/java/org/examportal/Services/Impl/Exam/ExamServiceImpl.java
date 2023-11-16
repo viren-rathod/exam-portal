@@ -61,9 +61,9 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public Page<ExamDto> findPaginated(Pageable pageable) {
-        log.info(String.format("findPaginated - start %s", pageable));
-        Page<Exam> page = examRepository.findAll(pageable);
+    public Page<ExamDto> findPaginated(Pageable pageable, String searchData) {
+        log.info(String.format("findPaginated - start %s %s", pageable, searchData));
+        Page<Exam> page = examRepository.findAllWithFilters(searchData, pageable);
         log.info(String.format("findPaginated - end %s", page));
         return page.map(exam -> modelMapper.map(exam, ExamDto.class));
     }

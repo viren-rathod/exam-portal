@@ -13,7 +13,7 @@ public interface QuestionsService {
 
     Set<QuestionsDto> findAllQuestions();
 
-    Page<QuestionsDto> findPaginated(Pageable pageable);
+    Page<QuestionsDto> findPaginated(Pageable pageable, String searchData);
 
     QuestionsDto findByQuestionId(Long questionId);
 

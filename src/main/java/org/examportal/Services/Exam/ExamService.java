@@ -13,7 +13,7 @@ public interface ExamService {
 
     Set<ExamDto> getExams();
 
-    Page<ExamDto> findPaginated(Pageable pageable);
+    Page<ExamDto> findPaginated(Pageable pageable,String searchData);
 
     ExamDto getExam(Long examId);
 
