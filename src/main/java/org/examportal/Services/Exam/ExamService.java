@@ -11,6 +11,10 @@ public interface ExamService {
 
     ExamDto updateExam(ExamDto exam,String user);
 
+    ExamDto startExam(Long examId,String user);
+
+    ExamDto stopExam(Long examId,String user);
+
     Set<ExamDto> getExams();
 
     Page<ExamDto> findPaginated(Pageable pageable);

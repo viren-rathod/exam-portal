@@ -1,6 +1,7 @@
 package org.examportal.Services.Impl.Exam;
 
 import lombok.extern.slf4j.Slf4j;
+import org.examportal.Constants.Status;
 import org.examportal.DTOs.Exam.ExamDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
 import org.examportal.Models.Exam.Exam;
@@ -49,6 +50,28 @@ public class ExamServiceImpl implements ExamService {
         examRepository.save(savedExam);
         ExamDto examDto = modelMapper.map(exam, ExamDto.class);
         log.info(String.format("updateExam - end %s", savedExam));
+        return examDto;
+    }
+
+    @Override
+    public ExamDto startExam(Long examId,String user) {
+        log.info(String.format("startExam - start %d", examId));
+        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+        exam.setStatus(Status.ACTIVE);
+        examRepository.save(exam);
+        ExamDto examDto = modelMapper.map(exam, ExamDto.class);
+        log.info(String.format("startExam - end %s", examDto));
+        return examDto;
+    }
+
+    @Override
+    public ExamDto stopExam(Long examId,String user) {
+        log.info(String.format("stopExam - start %d", examId));
+        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+        exam.setStatus(Status.INACTIVE);
+        examRepository.save(exam);
+        ExamDto examDto = modelMapper.map(exam, ExamDto.class);
+        log.info(String.format("startExam - end %s", examDto));
         return examDto;
     }
 
