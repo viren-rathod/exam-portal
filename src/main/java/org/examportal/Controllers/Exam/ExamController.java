@@ -86,8 +86,7 @@ public class ExamController {
         return new ResponseEntity<>(response, response.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-
-    //    update category
+    // update exam
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/")
@@ -97,6 +96,32 @@ public class ExamController {
         Response<ExamDto> response = new Response<>(examDto);
         response.setResponseCode(HttpStatus.OK.value());
         log.info(String.format("updateExam() - end %s", examDto));
+        return ResponseEntity.ok(response);
+    }
+
+    // start exam
+    @SecurityRequirement(name = "Bear Authentication")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/start")
+    public ResponseEntity<BaseResponseDto<ExamDto>> startExam(@Valid @RequestBody Long examId, Principal principal) {
+        log.info(String.format("startExam() - start %d", examId));
+        ExamDto examDto = examService.startExam(examId, principal.getName());
+        Response<ExamDto> response = new Response<>(examDto);
+        response.setResponseCode(HttpStatus.OK.value());
+        log.info(String.format("startExam() - end %s", examDto));
+        return ResponseEntity.ok(response);
+    }
+
+    // stop exam
+    @SecurityRequirement(name = "Bear Authentication")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/stop")
+    public ResponseEntity<BaseResponseDto<ExamDto>> stopExam(@Valid @RequestBody Long examId, Principal principal) {
+        log.info(String.format("stopExam() - start %d", examId));
+        ExamDto examDto = examService.stopExam(examId, principal.getName());
+        Response<ExamDto> response = new Response<>(examDto);
+        response.setResponseCode(HttpStatus.OK.value());
+        log.info(String.format("stopExam() - end %s", examDto));
         return ResponseEntity.ok(response);
     }
 
