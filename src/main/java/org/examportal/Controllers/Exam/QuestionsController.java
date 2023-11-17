@@ -67,10 +67,10 @@ public class QuestionsController {
 
     //get categories with Pagination
     @GetMapping("/paginated")
-    public ResponseEntity<Response<Page<QuestionsDto>>> getPaginatedQuestions(@RequestParam int page,
-                                                                              @RequestParam int size,
-                                                                              @RequestParam String sortOrder,
-                                                                              @RequestParam String sortField,
+    public ResponseEntity<Response<Page<QuestionsDto>>> getPaginatedQuestions(@RequestParam(required = false, defaultValue = "0") int page,
+                                                                              @RequestParam(required = false, defaultValue = "10") int size,
+                                                                              @RequestParam(required = false, defaultValue = "asc") String sortOrder,
+                                                                              @RequestParam(required = false, defaultValue = "id") String sortField,
                                                                               @RequestParam(required = false) String searchData) {
         log.info(String.format("getPaginatedQuestions() - start %d %d %s %s %s", page, size, sortOrder, sortField, searchData));
         Sort sort = sortOrder.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();

@@ -71,7 +71,7 @@ public class ExamServiceImpl implements ExamService {
         exam.setStatus(Status.INACTIVE);
         examRepository.save(exam);
         ExamDto examDto = modelMapper.map(exam, ExamDto.class);
-        log.info(String.format("startExam - end %s", examDto));
+        log.info(String.format("stopExam - end %s", examDto));
         return examDto;
     }
 
