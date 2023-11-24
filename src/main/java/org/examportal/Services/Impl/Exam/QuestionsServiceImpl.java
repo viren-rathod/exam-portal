@@ -1,9 +1,11 @@
 package org.examportal.Services.Impl.Exam;
 
 import lombok.extern.slf4j.Slf4j;
+import org.examportal.DTOs.Exam.OptionDto;
 import org.examportal.DTOs.Exam.QuestionsDto;
 import org.examportal.Exceptions.ResourceNotFoundException;
 import org.examportal.Models.Exam.Category;
+import org.examportal.Models.Exam.Options;
 import org.examportal.Models.Exam.Questions;
 import org.examportal.Repositories.Exam.CategoryRepository;
 import org.examportal.Repositories.Exam.QuestionsRepository;
@@ -79,7 +81,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         log.info(String.format("findByQuestionId - start %d", questionId));
         Questions questions = questionsRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
-        log.info(String.format("findByQuestionId - %s", questions));
+        log.info(String.format("findByQuestionId - end %s", questions));
         return modelMapper.map(questions, QuestionsDto.class);
     }
 
@@ -100,5 +102,13 @@ public class QuestionsServiceImpl implements QuestionsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
         questionsRepository.deleteById(questionId);
         log.info("deleteQuestion - end");
+    }
+
+    @Override
+    public OptionDto findAnswerByQuestionId(Long questionId) {
+        log.info(String.format("findAnswerByQuestionId - start %d", questionId));
+        Options answer = questionsRepository.findAnswerById(questionId);
+        log.info(String.format("findAnswerByQuestionId - end %s", answer));
+        return modelMapper.map(answer, OptionDto.class);
     }
 }

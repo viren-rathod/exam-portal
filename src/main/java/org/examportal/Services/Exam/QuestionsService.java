@@ -1,5 +1,6 @@
 package org.examportal.Services.Exam;
 
+import org.examportal.DTOs.Exam.OptionDto;
 import org.examportal.DTOs.Exam.QuestionsDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +21,6 @@ public interface QuestionsService {
     Set<QuestionsDto> findQuestionsByCategoryId(Long categoryId);
 
     void deleteQuestion(Long questionId);
+
+    OptionDto findAnswerByQuestionId(Long questionId);
 }

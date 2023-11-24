@@ -21,12 +21,10 @@ import java.util.stream.Collectors;
 @Service
 public class ExamServiceImpl implements ExamService {
     private final ExamRepository examRepository;
-    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
     public ExamServiceImpl(ExamRepository examRepository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
         this.examRepository = examRepository;
-        this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
     }
 

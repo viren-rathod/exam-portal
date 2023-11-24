@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.examportal.Constants.Exam.QuestionMessages;
 import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.BaseResponseDto;
+import org.examportal.DTOs.Exam.OptionDto;
 import org.examportal.DTOs.Exam.QuestionsDto;
 import org.examportal.DTOs.Response;
 import org.examportal.Services.Exam.QuestionsService;
@@ -118,4 +119,13 @@ public class QuestionsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{questionId}/answer")
+    public ResponseEntity<BaseResponseDto<OptionDto>> getAnswerByQuestion(@PathVariable("questionId") Long questionId) {
+        log.info(String.format("getAnswerByQuestion() - start %d", questionId));
+        OptionDto answer = questionsService.findAnswerByQuestionId(questionId);
+        Response<OptionDto> response = new Response<>(answer);
+        response.setResponseCode(HttpStatus.OK.value());
+        log.info(String.format("getAnswerByQuestion() - end %s", answer));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
