@@ -9,6 +9,7 @@ import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.Exam.OptionDto;
 import org.examportal.DTOs.Exam.QuestionsDto;
 import org.examportal.DTOs.Response;
+import org.examportal.Helper.MapObject;
 import org.examportal.Services.Exam.QuestionsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -36,48 +39,49 @@ public class QuestionsController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<BaseResponseDto<QuestionsDto>> addQuestion(@Valid @RequestBody QuestionsDto questionsDto, Principal principal) {
-        log.info(String.format("addQuestion() - start %s", questionsDto));
-        QuestionsDto savedQuestion = questionsService.addQuestion(questionsDto, principal.getName());
-        Response<QuestionsDto> response = new Response<>(savedQuestion);
+    public ResponseEntity<BaseResponseDto<Map<String, Object>>> addQuestion(@Valid @RequestBody MapObject<QuestionsDto, List<OptionDto>> requestDto, Principal principal) {
+        log.info(String.format("addQuestion() - start %s", requestDto));
+        Map<String, Object> mp = questionsService.addQuestion(requestDto, principal.getName());
+        Response<Map<String, Object>> response = new Response<>(mp);
         response.setResponseCode(HttpStatus.CREATED.value());
-        log.info(String.format("addQuestion() - end %s", savedQuestion));
+        response.setMessage(QuestionMessages.QUESTION_ADDED);
+        log.info(String.format("addQuestion() - end %s", response));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{questionId}")
-    public ResponseEntity<BaseResponseDto<QuestionsDto>> getQuestion(@PathVariable("questionId") Long questionId) {
+    public ResponseEntity<BaseResponseDto<Map<String, Object>>> getQuestion(@PathVariable("questionId") Long questionId) {
         log.info(String.format("getQuestion() - start %d", questionId));
-        QuestionsDto question = questionsService.findByQuestionId(questionId);
-        Response<QuestionsDto> response = new Response<>(question);
+        Map<String, Object> mp = questionsService.findByQuestionId(questionId);
+        Response<Map<String, Object>> response = new Response<>(mp);
         response.setResponseCode(HttpStatus.OK.value());
-        log.info(String.format("getQuestion() - end %s", question));
+        log.info(String.format("getQuestion() - end %s", mp));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public ResponseEntity<BaseResponseDto<Set<QuestionsDto>>> getQuestions() {
+    public ResponseEntity<BaseResponseDto<Set<Map<String, Object>>>> getQuestions() {
         log.info("getQuestions() - start");
-        Set<QuestionsDto> allQuestions = questionsService.findAllQuestions();
-        Response<Set<QuestionsDto>> response = new Response<>(allQuestions, allQuestions.size(), allQuestions.isEmpty());
-        response.setResponseCode(allQuestions.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (allQuestions.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
-        log.info(String.format("getQuestions() - end %s", allQuestions));
-        return new ResponseEntity<>(response, allQuestions.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+        Set<Map<String, Object>> collect = questionsService.findAllQuestions();
+        Response<Set<Map<String, Object>>> response = new Response<>(collect, collect.size());
+        response.setResponseCode(collect.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        if (collect.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        log.info(String.format("getQuestions() - end %s", collect));
+        return new ResponseEntity<>(response, collect.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     //get categories with Pagination
     @GetMapping("/paginated")
-    public ResponseEntity<Response<Page<QuestionsDto>>> getPaginatedQuestions(@RequestParam(required = false, defaultValue = "0") int page,
-                                                                              @RequestParam(required = false, defaultValue = "10") int size,
-                                                                              @RequestParam(required = false, defaultValue = "asc") String sortOrder,
-                                                                              @RequestParam(required = false, defaultValue = "id") String sortField,
-                                                                              @RequestParam(required = false) String searchData) {
+    public ResponseEntity<Response<Page<Map<String, Object>>>> getPaginatedQuestions(@RequestParam(required = false, defaultValue = "0") int page,
+                                                                                     @RequestParam(required = false, defaultValue = "10") int size,
+                                                                                     @RequestParam(required = false, defaultValue = "asc") String sortOrder,
+                                                                                     @RequestParam(required = false, defaultValue = "id") String sortField,
+                                                                                     @RequestParam(required = false) String searchData) {
         log.info(String.format("getPaginatedQuestions() - start %d %d %s %s %s", page, size, sortOrder, sortField, searchData));
         Sort sort = sortOrder.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<QuestionsDto> paginated = questionsService.findPaginated(pageable, searchData);
-        Response<Page<QuestionsDto>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
+        Page<Map<String, Object>> paginated = questionsService.findPaginated(pageable, searchData);
+        Response<Page<Map<String, Object>>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
         response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         if (response.getData().isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         log.info(String.format("getPaginatedQuestions() - end %s", paginated.getContent()));
@@ -85,10 +89,10 @@ public class QuestionsController {
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<BaseResponseDto<Set<QuestionsDto>>> getQuestionsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<BaseResponseDto<Set<Map<String, Object>>>> getQuestionsByCategory(@PathVariable Long categoryId) {
         log.info(String.format("getQuestionsByCategory() - start %d", categoryId));
-        Set<QuestionsDto> questions = questionsService.findQuestionsByCategoryId(categoryId);
-        Response<Set<QuestionsDto>> response = new Response<>(questions, questions.size(), questions.isEmpty());
+        Set<Map<String, Object>> questions = questionsService.findQuestionsByCategoryId(categoryId);
+        Response<Set<Map<String, Object>>> response = new Response<>(questions, questions.size(), questions.isEmpty());
         response.setResponseCode(questions.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         if (questions.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
         log.info(String.format("getQuestionsByCategory() - end %s", questions));
@@ -98,12 +102,13 @@ public class QuestionsController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/")
-    public ResponseEntity<BaseResponseDto<QuestionsDto>> updateQuestion(@Valid @RequestBody QuestionsDto questionsDto, Principal principal) {
-        log.info(String.format("updateQuestion() - start %s", questionsDto));
-        QuestionsDto questions = questionsService.updateQuestions(questionsDto, principal.getName());
-        Response<QuestionsDto> response = new Response<>(questions);
+    public ResponseEntity<BaseResponseDto<Map<String, Object>>> updateQuestion(@Valid @RequestBody MapObject<QuestionsDto, List<OptionDto>> requestDto, Principal principal) {
+        log.info(String.format("updateQuestion() - start %s", requestDto));
+        Map<String, Object> mp = questionsService.updateQuestions(requestDto, principal.getName());
+        Response<Map<String, Object>> response = new Response<>(mp);
         response.setResponseCode(HttpStatus.OK.value());
-        log.info(String.format("updateQuestion() - end %s", questions));
+        response.setMessage(QuestionMessages.QUESTION_UPDATED);
+        log.info(String.format("updateQuestion() - end %s", mp));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

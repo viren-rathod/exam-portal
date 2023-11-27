@@ -3,6 +3,7 @@ package org.examportal.DTOs.Exam;
 import lombok.*;
 import org.examportal.Constants.Status;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,10 @@ public class ExamDto {
     private String description;
 
     private String maxMarks;
+
+    private Timestamp created_at;
+
+    private String created_by;
 
     private String totalQuestions;
 

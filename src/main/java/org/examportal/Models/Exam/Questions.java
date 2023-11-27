@@ -1,5 +1,6 @@
 package org.examportal.Models.Exam;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -29,6 +30,7 @@ public class Questions extends BaseEntity {
             joinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "option_id", referencedColumnName = "id")
     )
+    @JsonIgnore
     private Options answer;
 
 
@@ -37,5 +39,6 @@ public class Questions extends BaseEntity {
             joinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
     )
+    @JsonIgnore
     private Category category;
 }
