@@ -90,9 +90,9 @@ public class OptionController {
     @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/saveAnswer")
-    public ResponseEntity<BaseResponseDto<String>> setAnswer(@Valid @RequestBody OptionDto optionDto) {
+    public ResponseEntity<BaseResponseDto<String>> setAnswer(@Valid @RequestBody OptionDto optionDto, Principal principal) {
         log.info(String.format("setAnswer() - start %s", optionDto));
-        String res = optionService.saveAnswer(optionDto);
+        String res = optionService.saveAnswer(optionDto, principal.getName());
         Response<String> response = new Response<>(res);
         response.setResponseCode(HttpStatus.CREATED.value());
         log.info(String.format("setAnswer() - end %s", response));

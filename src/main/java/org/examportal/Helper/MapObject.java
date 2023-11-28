@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class MapObject<T, K> {
-    private T object1;
-    private K object2;
+    private T T;
+    private K K;
 }

@@ -22,7 +22,7 @@ public class Questions extends BaseEntity {
 
     private String description;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<Options> options;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

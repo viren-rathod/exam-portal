@@ -15,5 +15,5 @@ public interface OptionService {
 
     void delete(Long optionId);
 
-    String saveAnswer(OptionDto optionDto);
+    String saveAnswer(OptionDto optionDto, String user);
 }

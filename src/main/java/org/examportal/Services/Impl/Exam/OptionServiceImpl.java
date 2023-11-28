@@ -84,13 +84,14 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public String saveAnswer(OptionDto optionDto) {
+    public String saveAnswer(OptionDto optionDto, String user) {
         log.info(String.format("saveAnswer - start %s", optionDto));
         optionRepository.findById(optionDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Option", "id", optionDto.getId()));
         Questions question = questionsRepository.findById(optionDto.getQuestionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", optionDto.getQuestionId()));
         Options option = modelMapper.map(optionDto, Options.class);
+        option.update(user);
         question.setAnswer(option);
         questionsRepository.save(question);
         log.info(String.format("saveAnswer - end %s", question));

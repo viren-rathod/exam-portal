@@ -41,20 +41,20 @@ public class QuestionsServiceImpl implements QuestionsService {
     @Override
     public Map<String, Object> addQuestion(MapObject<QuestionsDto, List<OptionDto>> requestDto, String user) {
         log.info(String.format("addQuestion - start %s", requestDto));
-        QuestionsDto questionsDto = requestDto.getObject1();
+        QuestionsDto questionsDto = requestDto.getT();
         Questions question = modelMapper.map(questionsDto, Questions.class);
         Category category = categoryRepository.findById(questionsDto.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", questionsDto.getCategoryId()));
         question.setCategory(category);
         question.update(user);
         Questions savedQuestion = questionsRepository.save(question);
-        List<OptionDto> optionDtoList = requestDto.getObject2().stream().map(optionDto -> {
+        List<OptionDto> optionDtoList = requestDto.getK().stream().map(optionDto -> {
             optionDto.setQuestionId(savedQuestion.getId());
             return optionService.create(optionDto, user);
         }).toList();
         Map<String, Object> mp = new HashMap<>();
-        mp.put("questionDto", savedQuestion);
-        mp.put("optionDtoList", optionDtoList);
+        mp.put("t", savedQuestion);
+        mp.put("k", optionDtoList);
         log.info(String.format("addQuestion - end %s ", mp));
         return mp;
     }
@@ -62,7 +62,7 @@ public class QuestionsServiceImpl implements QuestionsService {
     @Override
     public Map<String, Object> updateQuestions(MapObject<QuestionsDto, List<OptionDto>> requestDto, String user) {
         log.info(String.format("updateQuestions - start %s", requestDto));
-        QuestionsDto questionsDto = requestDto.getObject1();
+        QuestionsDto questionsDto = requestDto.getT();
         Questions question = modelMapper.map(questionsDto, Questions.class);
         questionsRepository.findById(questionsDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionsDto.getId()));
@@ -71,13 +71,13 @@ public class QuestionsServiceImpl implements QuestionsService {
         question.setCategory(category);
         question.update(user);
         Questions savedQuestion = questionsRepository.save(question);
-        List<OptionDto> optionDtoList = requestDto.getObject2().stream().map(optionDto -> {
+        List<OptionDto> optionDtoList = requestDto.getK().stream().map(optionDto -> {
             optionDto.setQuestionId(savedQuestion.getId());
             return optionService.create(optionDto, user);
         }).toList();
         Map<String, Object> mp = new HashMap<>();
-        mp.put("questionDto", savedQuestion);
-        mp.put("optionDtoList", optionDtoList);
+        mp.put("t", savedQuestion);
+        mp.put("k", optionDtoList);
         log.info(String.format("updateQuestions - end %s", mp));
         return mp;
     }
@@ -91,8 +91,8 @@ public class QuestionsServiceImpl implements QuestionsService {
             QuestionsDto questionsDto = modelMapper.map(question, QuestionsDto.class);
             Set<OptionDto> allOptions = optionService.findAllByQuestion(question.getId());
             Map<String, Object> mp = new HashMap<>();
-            mp.put("questionDto", questionsDto);
-            mp.put("optionDtoList", allOptions);
+            mp.put("t", questionsDto);
+            mp.put("k", allOptions);
             return mp;
         }).collect(Collectors.toSet());
     }
@@ -106,8 +106,8 @@ public class QuestionsServiceImpl implements QuestionsService {
             QuestionsDto questionsDto = modelMapper.map(question, QuestionsDto.class);
             Set<OptionDto> allOptions = optionService.findAllByQuestion(question.getId());
             Map<String, Object> mp = new HashMap<>();
-            mp.put("questionDto", questionsDto);
-            mp.put("optionDtoList", allOptions);
+            mp.put("t", questionsDto);
+            mp.put("k", allOptions);
             return mp;
         });
     }
@@ -121,8 +121,8 @@ public class QuestionsServiceImpl implements QuestionsService {
         QuestionsDto questionsDto = modelMapper.map(questions, QuestionsDto.class);
         Set<OptionDto> allOptions = optionService.findAllByQuestion(questions.getId());
         Map<String, Object> mp = new HashMap<>();
-        mp.put("questionDto", questionsDto);
-        mp.put("optionDtoList", allOptions);
+        mp.put("t", questionsDto);
+        mp.put("k", allOptions);
         return mp;
     }
 
@@ -137,8 +137,8 @@ public class QuestionsServiceImpl implements QuestionsService {
             QuestionsDto questionsDto = modelMapper.map(question, QuestionsDto.class);
             Set<OptionDto> allOptions = optionService.findAllByQuestion(question.getId());
             Map<String, Object> mp = new HashMap<>();
-            mp.put("questionDto", questionsDto);
-            mp.put("optionDtoList", allOptions);
+            mp.put("t", questionsDto);
+            mp.put("k", allOptions);
             return mp;
         }).collect(Collectors.toSet());
     }
