@@ -17,7 +17,8 @@ import java.util.Set;
 @Table(name = "questions")
 public class Questions extends BaseEntity {
     @NotEmpty
-    @Column(nullable = false, unique = true)
+    @Lob
+    @Column(nullable = false, unique = true,length = 512)
     private String title;
 
     private String description;

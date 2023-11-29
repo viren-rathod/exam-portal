@@ -16,7 +16,7 @@ public interface QuestionsRepository extends JpaRepository<Questions, Long> {
 
     @Query("SELECT q FROM Questions q WHERE " +
             "(:searchData IS NULL OR " +
-            "LOWER(q.title) LIKE LOWER(CONCAT('%', :searchData, '%')) OR " +
+            "LOWER(CAST(q.title AS string)) LIKE LOWER(CONCAT('%', :searchData, '%')) OR " +
             "LOWER(CAST(q.category.title AS string)) LIKE LOWER(CONCAT('%', :searchData, '%')) OR " +
             "LOWER(q.description) LIKE LOWER(CONCAT('%', :searchData, '%')))")
     Page<Questions> findAllWithFilters(@Param("searchData") String searchData, Pageable pageable);
