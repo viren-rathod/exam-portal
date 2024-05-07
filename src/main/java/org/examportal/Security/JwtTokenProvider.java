@@ -57,9 +57,9 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, AuthMessages.INVALID_TOKEN);
+            throw new ExamAPIException(HttpStatus.UNAUTHORIZED, AuthMessages.INVALID_TOKEN);
         } catch (ExpiredJwtException ex) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, AuthMessages.EXPIRED_TOKEN);
+            throw new ExamAPIException(HttpStatus.UNAUTHORIZED, AuthMessages.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException ex) {
             throw new ExamAPIException(HttpStatus.BAD_REQUEST, AuthMessages.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException ex) {
