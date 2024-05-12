@@ -41,6 +41,8 @@ public class CategoryController {
         CategoryDto savedCategory = categoryService.addCategory(categoryDto, principal.getName());
         Response<CategoryDto> response = new Response<>(savedCategory);
         response.setResponseCode(HttpStatus.CREATED.value());
+        response.setMessage(CategoryMessages.CATEGORY_CREATED);
+        response.setToast(true);
         log.info(String.format("addCategory() - end %s", savedCategory));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -52,6 +54,7 @@ public class CategoryController {
         CategoryDto categoryDto = categoryService.findCategoryById(categoryId);
         Response<CategoryDto> response = new Response<>(categoryDto);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setMessage(CategoryMessages.CATEGORY_FETCHED);
         log.info(String.format("getCategory() - end %s", categoryDto));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -63,7 +66,7 @@ public class CategoryController {
         Set<CategoryDto> allCategories = categoryService.findAllCategories();
         Response<Set<CategoryDto>> response = new Response<>(allCategories, allCategories.size(), allCategories.isEmpty());
         response.setResponseCode(allCategories.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (allCategories.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        response.setMessage(allCategories.isEmpty() ? UserMessages.NO_CONTENT : CategoryMessages.CATEGORY_FETCHED);
         log.info(String.format("getCategories() - end %s ", allCategories));
         return new ResponseEntity<>(response, allCategories.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -81,7 +84,7 @@ public class CategoryController {
         Page<CategoryDto> paginated = categoryService.findPaginated(pageable, searchData);
         Response<Page<CategoryDto>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
         response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (response.getData().isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        response.setMessage(response.getData().isEmpty() ? UserMessages.NO_CONTENT : CategoryMessages.CATEGORY_FETCHED);
         log.info(String.format("getPaginatedCategories() - end %s", paginated.getContent()));
         return new ResponseEntity<>(response, response.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -95,6 +98,8 @@ public class CategoryController {
         CategoryDto categoryDto = categoryService.updateCategory(category, principal.getName());
         Response<CategoryDto> response = new Response<>(categoryDto);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setMessage(CategoryMessages.CATEGORY_UPDATED);
+        response.setToast(true);
         log.info(String.format("updateCategory() - end %s", categoryDto));
         return ResponseEntity.ok(response);
     }
@@ -108,6 +113,8 @@ public class CategoryController {
         categoryService.deleteCategory(categoryId);
         Response<String> response = new Response<>(CategoryMessages.CATEGORY_DELETED);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setMessage(CategoryMessages.CATEGORY_DELETED);
+        response.setToast(true);
         log.info("deleteCategory() - end");
         return ResponseEntity.ok(response);
     }

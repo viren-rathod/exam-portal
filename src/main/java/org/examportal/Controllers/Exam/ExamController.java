@@ -41,6 +41,8 @@ public class ExamController {
         ExamDto savedExam = examService.addExam(examDto, principal.getName());
         Response<ExamDto> response = new Response<>(savedExam);
         response.setResponseCode(HttpStatus.CREATED.value());
+        response.setToast(true);
+        response.setMessage(ExamMessages.EXAM_CREATED);
         log.info(String.format("addExam() - end %s", savedExam));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -52,6 +54,7 @@ public class ExamController {
         ExamDto examDto = examService.getExam(examId);
         Response<ExamDto> response = new Response<>(examDto);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setMessage(ExamMessages.EXAM_FETCHED);
         log.info(String.format("getExam() - end %s", examDto));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -63,7 +66,7 @@ public class ExamController {
         Set<ExamDto> exams = examService.getExams();
         Response<Set<ExamDto>> response = new Response<>(exams, exams.size(), exams.isEmpty());
         response.setResponseCode(exams.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (exams.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        response.setMessage(exams.isEmpty() ? UserMessages.NO_CONTENT : ExamMessages.EXAM_FETCHED);
         log.info(String.format("getExams() - end %s ", exams));
         return new ResponseEntity<>(response, exams.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -81,7 +84,7 @@ public class ExamController {
         Page<ExamDto> paginated = examService.findPaginated(pageable, searchData);
         Response<Page<ExamDto>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
         response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (response.getData().isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        response.setMessage(response.getData().isEmpty() ? UserMessages.NO_CONTENT : ExamMessages.EXAM_FETCHED);
         log.info(String.format("getPaginatedExams() - end %s", paginated.getContent()));
         return new ResponseEntity<>(response, response.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -95,6 +98,8 @@ public class ExamController {
         ExamDto examDto = examService.updateExam(exam, principal.getName());
         Response<ExamDto> response = new Response<>(examDto);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setToast(true);
+        response.setMessage(ExamMessages.EXAM_UPDATED);
         log.info(String.format("updateExam() - end %s", examDto));
         return ResponseEntity.ok(response);
     }
@@ -108,6 +113,8 @@ public class ExamController {
         ExamDto examDto = examService.startExam(examId, principal.getName());
         Response<ExamDto> response = new Response<>(examDto);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setToast(true);
+        response.setMessage(ExamMessages.EXAM_STARTED);
         log.info(String.format("startExam() - end %s", examDto));
         return ResponseEntity.ok(response);
     }
@@ -121,6 +128,8 @@ public class ExamController {
         ExamDto examDto = examService.stopExam(examId, principal.getName());
         Response<ExamDto> response = new Response<>(examDto);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setToast(true);
+        response.setMessage(ExamMessages.EXAM_STOPPED);
         log.info(String.format("stopExam() - end %s", examDto));
         return ResponseEntity.ok(response);
     }
@@ -134,6 +143,8 @@ public class ExamController {
         examService.deleteExam(examId);
         Response<String> response = new Response<>(ExamMessages.EXAM_DELETED);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setToast(true);
+        response.setMessage(ExamMessages.EXAM_DELETED);
         log.info("deleteExam() - end");
         return ResponseEntity.ok(response);
     }

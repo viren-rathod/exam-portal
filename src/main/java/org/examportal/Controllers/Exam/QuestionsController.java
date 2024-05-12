@@ -45,6 +45,7 @@ public class QuestionsController {
         Response<Map<String, Object>> response = new Response<>(mp);
         response.setResponseCode(HttpStatus.CREATED.value());
         response.setMessage(QuestionMessages.QUESTION_ADDED);
+        response.setToast(true);
         log.info(String.format("addQuestion() - end %s", response));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -55,6 +56,7 @@ public class QuestionsController {
         Map<String, Object> mp = questionsService.findByQuestionId(questionId);
         Response<Map<String, Object>> response = new Response<>(mp);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setMessage(QuestionMessages.QUESTION_FETCHED);
         log.info(String.format("getQuestion() - end %s", mp));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -65,7 +67,7 @@ public class QuestionsController {
         Set<Map<String, Object>> collect = questionsService.findAllQuestions();
         Response<Set<Map<String, Object>>> response = new Response<>(collect, collect.size());
         response.setResponseCode(collect.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (collect.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        response.setMessage(collect.isEmpty() ? UserMessages.NO_CONTENT : QuestionMessages.QUESTION_FETCHED);
         log.info(String.format("getQuestions() - end %s", collect));
         return new ResponseEntity<>(response, collect.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -83,7 +85,7 @@ public class QuestionsController {
         Page<Map<String, Object>> paginated = questionsService.findPaginated(pageable, searchData);
         Response<Page<Map<String, Object>>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
         response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (response.getData().isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        response.setMessage(response.getData().isEmpty() ? UserMessages.NO_CONTENT : QuestionMessages.QUESTION_FETCHED);
         log.info(String.format("getPaginatedQuestions() - end %s", paginated.getContent()));
         return new ResponseEntity<>(response, response.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -94,7 +96,7 @@ public class QuestionsController {
         Set<Map<String, Object>> questions = questionsService.findQuestionsByCategoryId(categoryId);
         Response<Set<Map<String, Object>>> response = new Response<>(questions, questions.size(), questions.isEmpty());
         response.setResponseCode(questions.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
-        if (questions.isEmpty()) response.setMessage(UserMessages.NO_CONTENT);
+        response.setMessage(questions.isEmpty() ? UserMessages.NO_CONTENT : QuestionMessages.QUESTION_FETCHED);
         log.info(String.format("getQuestionsByCategory() - end %s", questions));
         return new ResponseEntity<>(response, questions.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -108,6 +110,7 @@ public class QuestionsController {
         Response<Map<String, Object>> response = new Response<>(mp);
         response.setResponseCode(HttpStatus.OK.value());
         response.setMessage(QuestionMessages.QUESTION_UPDATED);
+        response.setToast(true);
         log.info(String.format("updateQuestion() - end %s", mp));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -120,6 +123,8 @@ public class QuestionsController {
         questionsService.deleteQuestion(questionId);
         Response<String> response = new Response<>(QuestionMessages.QUESTION_DELETED);
         response.setResponseCode(HttpStatus.OK.value());
+        response.setMessage(QuestionMessages.QUESTION_DELETED);
+        response.setToast(true);
         log.info("deleteQuestion() - end");
         return ResponseEntity.ok(response);
     }
