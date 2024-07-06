@@ -1,6 +1,7 @@
 package org.examportal.DTOs.Exam;
 
 import lombok.*;
+import org.examportal.Constants.ExamStatus;
 import org.examportal.Constants.Status;
 
 import java.sql.Timestamp;
@@ -31,4 +32,13 @@ public class ExamDto {
     private Long examTime;
 
     private List<Long> categories;
+
+    private List<Long> candidates;
+
+    private ExamStatus candidateStatus;
+
+    private long candidateCount;
+
+    private String examCode;
+
 }

@@ -2,7 +2,7 @@ package org.examportal.Models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.examportal.Constants.Status;
+import org.examportal.Constants.ExamStatus;
 import org.examportal.Models.Exam.Exam;
 
 import java.time.LocalDateTime;
@@ -19,13 +19,13 @@ public class Candidate extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "exam_id")
     private Exam exam;
 
     private String email;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "college_id")
     private College college;
 
@@ -40,7 +40,7 @@ public class Candidate extends BaseEntity {
     private Long cgpa;
 
     @Enumerated(EnumType.STRING)
-    private Status candidateStatus;
+    private ExamStatus candidateStatus;
 
     private LocalDateTime examStartTime;
 

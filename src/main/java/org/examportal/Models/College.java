@@ -2,12 +2,16 @@ package org.examportal.Models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 
 @Setter
 @Getter
@@ -18,6 +22,6 @@ import lombok.Setter;
 public class College extends BaseEntity {
     private String name;
 
-    @OneToOne(mappedBy = "college", fetch = FetchType.LAZY)
-    private Candidate candidate;
+    @OneToMany(mappedBy = "college", fetch = FetchType.LAZY)
+    private Set<Candidate> candidates = new LinkedHashSet<>();
 }

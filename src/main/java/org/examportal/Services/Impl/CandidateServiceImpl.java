@@ -1,7 +1,7 @@
 package org.examportal.Services.Impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.examportal.Constants.Status;
+import org.examportal.Constants.ExamStatus;
 import org.examportal.DTOs.CandidateDto;
 import org.examportal.DTOs.CollegeDto;
 import org.examportal.DTOs.Exam.ExamDto;
@@ -60,7 +60,7 @@ public class CandidateServiceImpl implements CandidateService {
         candidate.setSscPercentage(candidateDto.getSscPercentage());
         candidate.setHscPercentage(candidateDto.getHscPercentage());
         candidate.setCgpa(candidateDto.getCgpa());
-        candidate.setCandidateStatus(Status.INACTIVE);
+        candidate.setCandidateStatus(ExamStatus.NOT_ATTENDED);
         candidate.setExamStartTime(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
         candidate.setExamEndTime(new Timestamp(System.currentTimeMillis()).toLocalDateTime().plusHours(exam.getExamTime()));
 
