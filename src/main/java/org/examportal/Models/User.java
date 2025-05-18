@@ -38,6 +38,9 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Candidate candidate;
 
+    @Column(name = "profile_image")
+    private String profileImage;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 }
