@@ -80,7 +80,10 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2->oauth2.userInfoEndpoint(userInfo->userInfo.userService(customOAuth2UserService)
                 )
-                                .successHandler(oauth2AuthenticationSuccessHandler()) // You will create this
+                                .successHandler(oauth2AuthenticationSuccessHandler(
+                                        httpSecurity.getSharedObject(JwtTokenProvider.class), // Get JwtTokenProvider from shared objects
+                                        httpSecurity.getSharedObject(UserRepository.class)
+                                ))
                                 .failureHandler(oauth2AuthenticationFailureHandler()) // You will create this
                          );
 

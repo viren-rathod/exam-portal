@@ -1,11 +1,15 @@
 package org.examportal.Security;
 
+import org.examportal.Constants.AuthProvider;
 import org.examportal.Constants.UserRole;
+import org.examportal.Exceptions.ExamAPIException;
 import org.examportal.Models.Role;
 import org.examportal.Models.User;
 import org.examportal.Repositories.RoleRepository;
 import org.examportal.Repositories.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -20,10 +24,12 @@ import java.util.Set;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomOAuth2UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public CustomOAuth2UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -76,9 +82,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setEmail((String) oAuth2User.getAttributes().get("email"));
         user.setUsername((String) oAuth2User.getAttributes().get("name"));
         // You might need to set a default role here
-        Set<Role> roles = new HashSet<>();
-        roleRepository.findByName(UserRole.valueOf("USER")).ifPresent(roles::add); // Assuming a default "ROLE_USER"
-        user.setRoles(roles);
+        Role userRole = roleRepository.findByName(UserRole.USER)
+                .orElseThrow(() -> new ExamAPIException(HttpStatus.NOT_FOUND, "Default role not found"));
+        Role managedRole = roleRepository.getReferenceById(userRole.getId());
+        user.setRoles(Set.of(managedRole));
+
+        user.setPassword((passwordEncoder.encode("password")));
+        user.setProviderId(oAuth2User.getName());
+        
+        String registrationId = userRequest.getClientRegistration().getRegistrationId().toUpperCase(); // e.g., "google" -> "GOOGLE"
+        AuthProvider provider = AuthProvider.valueOf(registrationId);
+        user.setProvider(provider);
+
+        user.setProfileImage((String) oAuth2User.getAttributes().get("picture"));
+
         // You might want to set a flag indicating it's an OAuth2 user
 //        user.setProvider(userRequest.getClientRegistration().getRegistrationId()); // e.g., "google"
 //        user.setProviderId(oAuth2User.getName()); // The subject from Google

@@ -7,6 +7,7 @@ import org.examportal.Models.User;
 import org.examportal.Repositories.UserRepository;
 import org.examportal.Security.JwtTokenProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,7 +39,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         // The 'authentication' object will contain an OAuth2AuthenticationToken
         // with the principal being the OAuth2User returned by your CustomOAuth2UserService.
 
-        String email = (String) authentication.getPrincipal();
+        OAuth2User oauth2User  = (OAuth2User ) authentication.getPrincipal();
+        String email = (String) oauth2User.getAttributes().get("email");
 
         // Load the User entity from your database based on the email
         Optional<User> userOptional = userRepository.findByEmail(email);
