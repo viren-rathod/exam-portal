@@ -96,6 +96,7 @@ public class CandidateController {
 //            response.getData().put("created_by", user.getCreated_by());
             response.getData().put("username", user.getUsername());
             response.getData().put("email", user.getEmail());
+            response.getData().put("profile_image", user.getProfileImage());
             response.getData().put("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
         } else {
             response.setResponseCode(HttpStatus.NO_CONTENT.value());

@@ -8,6 +8,7 @@ import org.examportal.Models.BaseEntity;
 import org.examportal.Models.Candidate;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -42,7 +43,7 @@ public class Exam extends BaseEntity {
     )
     private Set<Category> categories = new LinkedHashSet<>();
 
-    @OneToOne(mappedBy = "exam", fetch = FetchType.LAZY)
-    private Candidate candidate;
+    @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY)
+    private List<Candidate> candidate;
 }
 

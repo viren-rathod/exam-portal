@@ -4,6 +4,7 @@ import org.examportal.DTOs.Exam.ExamDto;
 import org.examportal.Models.BaseEntity;
 import org.examportal.Models.Exam.Category;
 import org.examportal.Models.Exam.Exam;
+import org.examportal.Repositories.CandidateRepository;
 import org.examportal.Repositories.Exam.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -19,9 +20,12 @@ import java.util.stream.Collectors;
 @Configuration
 public class CustomMapper {
     private final CategoryRepository categoryRepository;
+    private final CandidateRepository candidateRepository;
 
-    public CustomMapper(CategoryRepository categoryRepository) {
+    public CustomMapper(
+            CategoryRepository categoryRepository, CandidateRepository candidateRepository) {
         this.categoryRepository = categoryRepository;
+        this.candidateRepository = candidateRepository;
     }
 
     @Bean

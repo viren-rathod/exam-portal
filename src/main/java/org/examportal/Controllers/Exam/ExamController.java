@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.examportal.Constants.Exam.ExamMessages;
+import org.examportal.Constants.Status;
 import org.examportal.Constants.UserMessages;
 import org.examportal.DTOs.BaseResponseDto;
 import org.examportal.DTOs.Exam.ExamDto;
@@ -77,11 +78,13 @@ public class ExamController {
                                                                      @RequestParam(required = false, defaultValue = "10") int size,
                                                                      @RequestParam(required = false, defaultValue = "asc") String sortOrder,
                                                                      @RequestParam(required = false, defaultValue = "id") String sortField,
-                                                                     @RequestParam(required = false) String searchData) {
+                                                                     @RequestParam(required = false) String searchData,
+                                                                     @RequestParam(required = false) Status status
+    ) {
         log.info(String.format("getPaginatedExams() - start %d %d %s %s %s", page, size, sortOrder, sortField, searchData));
         Sort sort = sortOrder.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<ExamDto> paginated = examService.findPaginated(pageable, searchData);
+        Page<ExamDto> paginated = examService.findPaginated(pageable, searchData, status);
         Response<Page<ExamDto>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
         response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
         response.setMessage(response.getData().isEmpty() ? UserMessages.NO_CONTENT : ExamMessages.EXAM_FETCHED);
@@ -147,5 +150,22 @@ public class ExamController {
         response.setMessage(ExamMessages.EXAM_DELETED);
         log.info("deleteExam() - end");
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<Response<Page<ExamDto>>> getAllActiveExams(@RequestParam(required = false, defaultValue = "0") int page,
+                                                                     @RequestParam(required = false, defaultValue = "10") int size,
+                                                                     @RequestParam(required = false, defaultValue = "asc") String sortOrder,
+                                                                     @RequestParam(required = false, defaultValue = "id") String sortField,
+                                                                     @RequestParam(required = false) String searchData,
+                                                                     @RequestParam(required = false) Long userId) {
+        log.info(String.format("getAllActiveExams() - start %d %d %s %s %s", page, size, sortOrder, sortField, searchData));
+        Sort sort = sortOrder.equals("desc") ? Sort.by(sortField).descending() : Sort.by(sortField).ascending();
+        Page<ExamDto> paginated = examService.getAllActiveExams(PageRequest.of(page, size, sort), searchData, userId);
+        Response<Page<ExamDto>> response = new Response<>(paginated, paginated.getContent().size(), paginated.getContent().isEmpty());
+        response.setResponseCode(response.getData().isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        response.setMessage(response.getData().isEmpty() ? UserMessages.NO_CONTENT : ExamMessages.EXAM_FETCHED);
+        log.info(String.format("getAllActiveExams() - end %s", paginated.getContent()));
+        return new ResponseEntity<>(response, response.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 }

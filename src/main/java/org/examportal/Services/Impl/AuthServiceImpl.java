@@ -1,6 +1,7 @@
 package org.examportal.Services.Impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.examportal.Constants.AuthProvider;
 import org.examportal.Constants.UserMessages;
 import org.examportal.Constants.UserRole;
 import org.examportal.DTOs.JWTAuthResponse;
@@ -80,6 +81,10 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.update(registerDto.getEmail());
+
+        user.setProviderId(null);
+        user.setProvider(AuthProvider.LOCAL);
+        user.setProfileImage(null);
 
         Set<Role> roles = new HashSet<>();
         Optional<Role> opt = roleRepository.findByName(UserRole.USER);

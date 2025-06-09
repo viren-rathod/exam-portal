@@ -9,6 +9,8 @@ import org.examportal.Exceptions.ExamAPIException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -25,7 +27,21 @@ public class JwtTokenProvider {
 
     //Generating JWT Token
     public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+        String username;
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            if (principal instanceof org.examportal.Models.User) {
+                username = ((org.examportal.Models.User) principal).getEmail();
+            } else {
+                username = ((UserDetails) principal).getUsername(); // Fallback
+            }
+        } else if (principal instanceof OAuth2User) {
+            username = (String) ((OAuth2User) principal).getAttributes().get("email");
+        } else {
+            username = authentication.getName();
+        }
+
 
         Date currentDate = new Date();
 

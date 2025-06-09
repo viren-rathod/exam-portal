@@ -3,8 +3,13 @@ package org.examportal.Config;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
+import org.examportal.Helper.OAuth2AuthenticationFailureHandler;
+import org.examportal.Helper.OAuth2AuthenticationSuccessHandler;
+import org.examportal.Repositories.UserRepository;
+import org.examportal.Security.CustomOAuth2UserService;
 import org.examportal.Security.JwtAuthenticationEntryPoint;
 import org.examportal.Security.JwtAuthenticationFilter;
+import org.examportal.Security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -34,10 +39,14 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter authenticationFilter;
 
+    private final CustomOAuth2UserService customOAuth2UserService; // You will create this
+
     public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint,
-                          JwtAuthenticationFilter authenticationFilter) {
+                          JwtAuthenticationFilter authenticationFilter,
+                          CustomOAuth2UserService customOAuth2UserService) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.authenticationFilter = authenticationFilter;
+        this.customOAuth2UserService = customOAuth2UserService;
     }
 
     @Bean
@@ -57,6 +66,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers("/api/auth/getCurrentUser").authenticated()
+                        .requestMatchers("/oauth2/**").permitAll() // Allow access to OAuth2 endpoints
                         .requestMatchers(HttpMethod.GET).permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
@@ -67,9 +77,28 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
+                .oauth2Login(oauth2->oauth2.userInfoEndpoint(userInfo->userInfo.userService(customOAuth2UserService)
+                )
+                                .successHandler(oauth2AuthenticationSuccessHandler(
+                                        httpSecurity.getSharedObject(JwtTokenProvider.class), // Get JwtTokenProvider from shared objects
+                                        httpSecurity.getSharedObject(UserRepository.class)
+                                ))
+                                .failureHandler(oauth2AuthenticationFailureHandler()) // You will create this
+                         );
 
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
+    }
+
+    // Define beans for success and failure handlers
+    @Bean
+    public OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
+        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider,userRepository); // Implement this class
+    }
+
+    @Bean
+    public OAuth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler() {
+        return new OAuth2AuthenticationFailureHandler(); // Implement this class
     }
 }
