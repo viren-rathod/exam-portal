@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -22,10 +23,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final UserRepository userRepository; // To fetch the User entity
 
 
-    // You might want to set the redirect URI dynamically or via configuration
-    // Configure your redirect URI for the client-side application
+    
     @Setter
-    private String redirectUri = "http://localhost:4200/login-success"; // Example frontend URI
+    @Value("${oauth2.success.redirect-uri}")
+    private String redirectUri;
 
     public OAuth2AuthenticationSuccessHandler(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
         this.jwtTokenProvider = jwtTokenProvider;

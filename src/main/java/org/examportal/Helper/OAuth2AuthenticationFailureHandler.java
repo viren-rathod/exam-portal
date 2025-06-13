@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.core.AuthenticationException;
 import java.io.IOException;
@@ -14,7 +15,8 @@ import java.io.IOException;
 @Component
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private String redirectUri = "http://localhost:4200/login?error=oauth2_login_failed"; // Example frontend error URI
+    @Value("${oauth2.failure.redirect-uri}")
+    private String redirectUri;
 
 
     @Override
