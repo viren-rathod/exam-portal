@@ -306,8 +306,34 @@ public class StudentExamServiceImpl implements StudentExamService {
         result.setExamTitle(exam.getTitle());
         result.setTotalQuestions(totalQuestions);
         result.setCorrectAnswers(correctCount);
-        result.setTotalMarks(totalQuestions); // each question = 1 mark
-        result.setScoredMarks(correctCount); // each question = 1 mark
+        result.setTotalMarks(totalQuestions);
+        result.setScoredMarks(correctCount);
         return result;
+    }
+
+    @Override
+    public ExamTimingDto getExamTiming(Long examId, String username) {
+        log.info("getExamTiming - start examId={} username={}", examId, username);
+
+        User user = userRepository.findByUsernameOrEmail(username, username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+
+        Candidate candidate = candidateRepository.findByUserAndExam(user, exam)
+                .orElseThrow(() -> new RuntimeException(ExamMessages.EXAM_NOT_STARTED));
+
+        if (candidate.getCandidateStatus() != ExamStatus.ATTENDING) {
+            throw new RuntimeException("Exam is not in progress");
+        }
+
+        ExamTimingDto timingDto = new ExamTimingDto();
+        timingDto.setExamEndTime(candidate.getExamEndTime());
+        timingDto.setServerTime(LocalDateTime.now());
+        timingDto.setExamTitle(exam.getTitle());
+        timingDto.setExamTimeMinutes(exam.getExamTime());
+
+        log.info("getExamTiming - end");
+        return timingDto;
     }
 }

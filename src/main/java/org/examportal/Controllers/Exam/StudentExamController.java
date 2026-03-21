@@ -117,4 +117,17 @@ public class StudentExamController {
         log.info("getExamResult() - end");
         return ResponseEntity.ok(response);
     }
+
+    // Get time remaining for an in-progress exam
+    @GetMapping("/{examId}/time-remaining")
+    public ResponseEntity<Response<ExamTimingDto>> getTimeRemaining(
+            @PathVariable Long examId, Principal principal) {
+        log.info("getTimeRemaining() - start examId={}", examId);
+        ExamTimingDto timing = studentExamService.getExamTiming(examId, principal.getName());
+        Response<ExamTimingDto> response = new Response<>(timing);
+        response.setResponseCode(HttpStatus.OK.value());
+        response.setMessage("Exam timing fetched");
+        log.info("getTimeRemaining() - end");
+        return ResponseEntity.ok(response);
+    }
 }

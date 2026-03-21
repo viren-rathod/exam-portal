@@ -2,6 +2,7 @@ package org.examportal.Services.Exam;
 
 import org.examportal.DTOs.Exam.ExamDto;
 import org.examportal.DTOs.Exam.ExamResultDto;
+import org.examportal.DTOs.Exam.ExamTimingDto;
 import org.examportal.DTOs.Exam.StudentExamQuestionDto;
 import org.examportal.DTOs.Exam.SubmitAnswerDto;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,6 @@ public interface StudentExamService {
     ExamResultDto finishExam(Long examId, String username);
 
     ExamResultDto getExamResult(Long examId, String username);
+
+    ExamTimingDto getExamTiming(Long examId, String username);
 }

@@ -15,4 +15,6 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     Optional<Candidate> findByUserAndExam(User user, Exam exam);
 
     Long countByExamId(Long examId);
+
+    List<Candidate> findByExamId(Long examId);
 }

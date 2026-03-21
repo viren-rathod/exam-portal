@@ -20,7 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -167,5 +167,38 @@ public class ExamController {
         response.setMessage(response.getData().isEmpty() ? UserMessages.NO_CONTENT : ExamMessages.EXAM_FETCHED);
         log.info(String.format("getAllActiveExams() - end %s", paginated.getContent()));
         return new ResponseEntity<>(response, response.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
+    // Get candidates for an exam (ADMIN)
+    @SecurityRequirement(name = "Bear Authentication")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/{examId}/candidates")
+    public ResponseEntity<Response<List<Map<String, Object>>>> getExamCandidates(@PathVariable Long examId) {
+        log.info("getExamCandidates() - start examId={}", examId);
+        org.examportal.Models.Exam.Exam exam = examService.getExamEntity(examId);
+        List<org.examportal.Models.Candidate> candidates = examService.getCandidatesByExamId(examId);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (org.examportal.Models.Candidate c : candidates) {
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("candidateId", c.getId());
+            map.put("username", c.getUser() != null ? c.getUser().getUsername() : "N/A");
+            map.put("email", c.getEmail());
+            map.put("enrollmentNumber", c.getEnrollmentNumber());
+            map.put("contactNumber", c.getContactNumber());
+            map.put("collegeName", c.getCollege() != null ? c.getCollege().getName() : "N/A");
+            map.put("status", c.getCandidateStatus() != null ? c.getCandidateStatus().name() : "NOT_ATTENDED");
+            map.put("score", c.getScore());
+            map.put("totalQuestions", c.getTotalQuestions());
+            map.put("examStartTime", c.getExamStartTime());
+            map.put("examEndTime",   c.getExamEndTime());
+            result.add(map);
+        }
+
+        Response<List<Map<String, Object>>> response = new Response<>(result, result.size(), result.isEmpty());
+        response.setResponseCode(result.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        response.setMessage(result.isEmpty() ? "No candidates found" : "Candidates fetched");
+        log.info("getExamCandidates() - end, count={}", result.size());
+        return new ResponseEntity<>(response, result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 }
