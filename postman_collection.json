@@ -1,0 +1,1309 @@
+{
+  "info": {
+    "_postman_id": "c138b368-245f-42ae-9bc3-cdbadb823610",
+    "name": "Exam Portal - Full API Collection",
+    "description": "Complete Postman collection mapping all endpoints for the Exam Portal application.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usernameOrEmail\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"student1\",\n  \"email\": \"student1@example.com\",\n  \"password\": \"pass123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get States",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/states",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "states"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cities By State",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/cities/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "cities",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users & Candidates",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/user/getCurrentUser",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "getCurrentUser"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Candidate (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"student1\",\n  \"examId\": 1,\n  \"email\": \"student1@example.com\",\n  \"collegeId\": 1,\n  \"enrollmentNumber\": \"EN12345\",\n  \"contactNumber\": \"9876543210\",\n  \"sscPercentage\": 85,\n  \"hscPercentage\": 88,\n  \"cgpa\": 8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Candidates",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/user/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Paginated Candidates",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/user/paginated?page=0&size=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "paginated"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "College",
+      "item": [
+        {
+          "name": "Add College",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test College\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/college/add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "college",
+                "add"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add All Colleges",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  { \"name\": \"College 1\" },\n  { \"name\": \"College 2\" }\n]"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/college/add-all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "college",
+                "add-all"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Add Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Programming\",\n  \"description\": \"Programming Questions\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/category",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Category list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/category/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/category/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Updated Programming\",\n  \"description\": \"Updated Programming Questions\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/category/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/category/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Categories Paginated",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/category/paginated?page=0&size=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "paginated"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exams (Admin)",
+      "item": [
+        {
+          "name": "Add Exam",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Java Basics Exam\",\n  \"description\": \"Basic Java Assessment\",\n  \"maxMarks\": \"10\",\n  \"totalQuestions\": \"10\",\n  \"examTime\": 60,\n  \"categories\": [1]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/exam",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Exams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/exam/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Exam by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/exam/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Exam",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Java Basics Exam Updated\",\n  \"description\": \"Basic Java Assessment\",\n  \"maxMarks\": \"10\",\n  \"totalQuestions\": \"10\",\n  \"examTime\": 60,\n  \"categories\": [1]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/exam/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Start Exam (Make Active)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "1"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/exam/start",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                "start"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Stop Exam (Make Inactive)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "1"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/exam/stop",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                "stop"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Exam",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/exam/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Paginated Exams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/exam/paginated?page=0&size=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                "paginated"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Active Exams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/exam/active",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "exam",
+                "active"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Questions & Options",
+      "item": [
+        {
+          "name": "Add Question with Options",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": {\n    \"title\": \"What is Java?\",\n    \"description\": \"Basic programming concept\",\n    \"categoryId\": 1\n  },\n  \"value\": [\n    {\n      \"title\": \"A programming language\"\n    },\n    {\n      \"title\": \"A coffee maker\"\n    },\n    {\n      \"title\": \"An animal\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/questions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "questions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Question",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": {\n    \"id\": 1,\n    \"title\": \"What is Java? (Updated)\",\n    \"categoryId\": 1\n  },\n  \"value\": [\n    {\n      \"id\": 1,\n      \"title\": \"A programming language\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/questions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Question Answer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"questionId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/option/saveAnswer",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "option",
+                "saveAnswer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Question by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Questions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Questions by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions/category/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "category",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Question Answer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions/1/answer",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "1",
+                "answer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Question",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Extra Option",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"A new option\",\n  \"questionId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/option",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "option"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Option",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Updated option\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/option/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "option",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Option",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/option/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "option",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Flow",
+      "item": [
+        {
+          "name": "Get Active Exams",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/student/exam/active?page=0&size=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "student",
+                "exam",
+                "active"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Start Exam",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/student/exam/{{examId}}/start",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "student",
+                "exam",
+                "{{examId}}",
+                "start"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Exam Questions (Resume)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/student/exam/{{examId}}/questions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "student",
+                "exam",
+                "{{examId}}",
+                "questions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Answer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"examQuestionId\": 1,\n  \"selectedOptionId\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/student/exam/answer",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "student",
+                "exam",
+                "answer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Finish Exam",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/student/exam/{{examId}}/finish",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "student",
+                "exam",
+                "{{examId}}",
+                "finish"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Exam Result",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/student/exam/{{examId}}/result",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "student",
+                "exam",
+                "{{examId}}",
+                "result"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:9191",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "YOUR_JWT_TOKEN_HERE",
+      "type": "string"
+    },
+    {
+      "key": "examId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
