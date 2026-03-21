@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @Tag(name = "APIs for Colleges")
 @RestController
@@ -38,6 +39,17 @@ public class CollegeController {
         response.setResponseCode(HttpStatus.CREATED.value());
         response.setMessage(UserMessages.COLLEGE_ADDED);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @SecurityRequirement(name = "Bear Authentication")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @GetMapping("/")
+    public ResponseEntity<BaseResponseDto<Set<CollegeDto>>> getAllColleges() {
+        Set<CollegeDto> colleges = collegeService.findAll();
+        Response<Set<CollegeDto>> response = new Response<>(colleges, colleges.size(), colleges.isEmpty());
+        response.setResponseCode(colleges.isEmpty() ? HttpStatus.NO_CONTENT.value() : HttpStatus.OK.value());
+        if (colleges.isEmpty()) response.setMessage("No colleges found");
+        return new ResponseEntity<>(response, colleges.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "Bear Authentication")

@@ -25,4 +25,8 @@ public interface ExamService {
     ExamDto getExam(Long examId);
 
     void deleteExam(Long examId);
+
+    org.examportal.Models.Exam.Exam getExamEntity(Long examId);
+
+    java.util.List<org.examportal.Models.Candidate> getCandidatesByExamId(Long examId);
 }

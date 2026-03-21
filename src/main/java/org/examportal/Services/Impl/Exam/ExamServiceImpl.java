@@ -54,10 +54,16 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamDto updateExam(ExamDto exam, String user) {
         log.info(String.format("updateExam - start %s", exam));
+        
+        Exam existingExam = examRepository.findById(exam.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", exam.getId()));
+                
         Exam savedExam = modelMapper.map(exam, Exam.class);
+        savedExam.setExamCode(existingExam.getExamCode());
+        
         savedExam.update(user);
         examRepository.save(savedExam);
-        ExamDto examDto = modelMapper.map(exam, ExamDto.class);
+        ExamDto examDto = modelMapper.map(savedExam, ExamDto.class);
         log.info(String.format("updateExam - end %s", savedExam));
         return examDto;
     }
@@ -135,5 +141,16 @@ public class ExamServiceImpl implements ExamService {
         Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
         log.info(String.format("deleteExam - end %s", exam));
         examRepository.delete(exam);
+    }
+
+    @Override
+    public Exam getExamEntity(Long examId) {
+        return examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+    }
+
+    @Override
+    public java.util.List<Candidate> getCandidatesByExamId(Long examId) {
+        return candidateRepository.findByExamId(examId);
     }
 }

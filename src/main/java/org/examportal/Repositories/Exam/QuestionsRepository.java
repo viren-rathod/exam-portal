@@ -23,7 +23,7 @@ public interface QuestionsRepository extends JpaRepository<Questions, Long> {
     Page<Questions> findAllWithFilters(@Param("searchData") String searchData, Pageable pageable);
 
     @Query("SELECT q.answer FROM Questions q WHERE q.id = :questionId")
-    Options findAnswerById(Long questionId);
+    Options findAnswerById(@Param("questionId") Long questionId);
 
     @Query(value = "SELECT q.id FROM questions q INNER JOIN question_category qc ON q.id = qc.question_id " +
             "WHERE qc.category_id IN (:categoryIds) ORDER BY RAND() LIMIT :limit", nativeQuery = true)
