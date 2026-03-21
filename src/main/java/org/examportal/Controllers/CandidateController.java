@@ -41,7 +41,7 @@ public class CandidateController {
     }
 
     @SecurityRequirement(name = "Bear Authentication")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PostMapping("")
     public ResponseEntity<BaseResponseDto<String>> addCandidate(@Valid @RequestBody CandidateDto candidateDto, Principal principal) {
         log.info(String.format("addCandidate() - start %s", candidateDto));

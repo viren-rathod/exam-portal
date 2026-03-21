@@ -76,7 +76,7 @@ public class StudentExamServiceImpl implements StudentExamService {
     public List<StudentExamQuestionDto> startExam(Long examId, String username) {
         log.info("startExam - start examId={} username={}", examId, username);
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameOrEmail(username, username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
@@ -102,13 +102,12 @@ public class StudentExamServiceImpl implements StudentExamService {
                 log.info("startExam - already attending, returning existing questions");
                 return getQuestionsForCandidate(candidate);
             }
+        } else {
+            // Candidate has not filled out the registration form
+            throw new RuntimeException("You must fill out the candidate registration form for this exam first!");
         }
 
-        // Create new candidate entry
-        Candidate candidate = new Candidate();
-        candidate.setUser(user);
-        candidate.setExam(exam);
-        candidate.setEmail(user.getEmail());
+        Candidate candidate = existingCandidate.get();
         candidate.setCandidateStatus(ExamStatus.ATTENDING);
         candidate.setExamStartTime(LocalDateTime.now());
         candidate.setExamEndTime(LocalDateTime.now().plusMinutes(exam.getExamTime()));
@@ -121,8 +120,11 @@ public class StudentExamServiceImpl implements StudentExamService {
                 .map(BaseEntity::getId)
                 .collect(Collectors.toList());
 
-        List<Questions> randomQuestions = questionsRepository.findRandomQuestionsByCategoryIds(
+        List<Long> randomQuestionIds = questionsRepository.findRandomQuestionIdsByCategoryIds(
                 categoryIds, totalQuestionsNeeded);
+
+        List<Questions> randomQuestions = new java.util.ArrayList<>(questionsRepository.findAllById(randomQuestionIds));
+        java.util.Collections.shuffle(randomQuestions);
 
         if (randomQuestions.size() < totalQuestionsNeeded) {
             log.warn("startExam - not enough questions available. Needed={}, Found={}",
@@ -152,7 +154,7 @@ public class StudentExamServiceImpl implements StudentExamService {
                 .orElseThrow(() -> new ResourceNotFoundException("ExamQuestion", "id", dto.getExamQuestionId()));
 
         // Validate that this question belongs to the user
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameOrEmail(username, username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
 
         if (!examQuestion.getCandidate().getUser().getId().equals(user.getId())) {
@@ -184,7 +186,7 @@ public class StudentExamServiceImpl implements StudentExamService {
     public List<StudentExamQuestionDto> getExamQuestions(Long examId, String username) {
         log.info("getExamQuestions - start examId={} username={}", examId, username);
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameOrEmail(username, username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
@@ -200,7 +202,7 @@ public class StudentExamServiceImpl implements StudentExamService {
     public ExamResultDto finishExam(Long examId, String username) {
         log.info("finishExam - start examId={} username={}", examId, username);
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameOrEmail(username, username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
@@ -244,7 +246,7 @@ public class StudentExamServiceImpl implements StudentExamService {
     public ExamResultDto getExamResult(Long examId, String username) {
         log.info("getExamResult - start examId={} username={}", examId, username);
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameOrEmail(username, username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
@@ -305,7 +307,7 @@ public class StudentExamServiceImpl implements StudentExamService {
         result.setTotalQuestions(totalQuestions);
         result.setCorrectAnswers(correctCount);
         result.setTotalMarks(totalQuestions); // each question = 1 mark
-        result.setScoredMarks(correctCount);  // each question = 1 mark
+        result.setScoredMarks(correctCount); // each question = 1 mark
         return result;
     }
 }
