@@ -78,14 +78,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .oauth2Login(oauth2->oauth2.userInfoEndpoint(userInfo->userInfo.userService(customOAuth2UserService)
-                )
+                .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)
+                                )
                                 .successHandler(oauth2AuthenticationSuccessHandler(
                                         httpSecurity.getSharedObject(JwtTokenProvider.class), // Get JwtTokenProvider from shared objects
                                         httpSecurity.getSharedObject(UserRepository.class)
                                 ))
                                 .failureHandler(oauth2AuthenticationFailureHandler()) // You will create this
-                         );
+                );
 
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
@@ -94,7 +94,7 @@ public class SecurityConfig {
     // Define beans for success and failure handlers
     @Bean
     public OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
-        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider,userRepository); // Implement this class
+        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, userRepository); // Implement this class
     }
 
     @Bean

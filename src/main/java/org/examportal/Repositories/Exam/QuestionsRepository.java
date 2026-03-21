@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Set;
 
 public interface QuestionsRepository extends JpaRepository<Questions, Long> {
@@ -23,4 +24,9 @@ public interface QuestionsRepository extends JpaRepository<Questions, Long> {
 
     @Query("SELECT q.answer FROM Questions q WHERE q.id = :questionId")
     Options findAnswerById(Long questionId);
+
+    @Query(value = "SELECT q.id FROM questions q INNER JOIN question_category qc ON q.id = qc.question_id " +
+            "WHERE qc.category_id IN (:categoryIds) ORDER BY RAND() LIMIT :limit", nativeQuery = true)
+    List<Long> findRandomQuestionIdsByCategoryIds(@Param("categoryIds") List<Long> categoryIds,
+                                                  @Param("limit") int limit);
 }

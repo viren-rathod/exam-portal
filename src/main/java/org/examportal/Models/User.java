@@ -2,6 +2,9 @@ package org.examportal.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,8 +39,9 @@ public class User extends BaseEntity {
     )
     private Set<Role> roles;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Candidate candidate;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Candidate> candidates;
 
     @Column(name = "profile_image")
     private String profileImage;
@@ -47,6 +51,6 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
-    
-    private String providerId;   
+
+    private String providerId;
 }

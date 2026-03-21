@@ -12,10 +12,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "candidates")
+@Table(name = "candidates", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "exam_id"})
+})
 @ToString
 public class Candidate extends BaseEntity {
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -45,5 +47,9 @@ public class Candidate extends BaseEntity {
     private LocalDateTime examStartTime;
 
     private LocalDateTime examEndTime;
+
+    private Integer score;
+
+    private Integer totalQuestions;
 
 }

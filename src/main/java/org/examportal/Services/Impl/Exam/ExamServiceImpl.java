@@ -112,11 +112,8 @@ public class ExamServiceImpl implements ExamService {
             if (userId != null) {
                 Optional<User> user = userRepository.findById(userId);
                 if (user.isPresent()) {
-                    Optional<Candidate> optional = candidateRepository.findByUser(user.get());
-                    if (optional.isPresent()) {
-                        Candidate candidate = optional.get();
-                        examDto.setCandidateStatus(candidate.getCandidateStatus());
-                    }
+                    Optional<Candidate> optional = candidateRepository.findByUserAndExam(user.get(), exam);
+                    optional.ifPresent(candidate -> examDto.setCandidateStatus(candidate.getCandidateStatus()));
                 }
             }
             return examDto;
