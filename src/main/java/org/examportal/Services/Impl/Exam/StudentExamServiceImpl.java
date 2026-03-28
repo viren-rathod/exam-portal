@@ -23,8 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,16 +55,30 @@ public class StudentExamServiceImpl implements StudentExamService {
     public Page<ExamDto> getActiveExams(Pageable pageable, String searchData, Long userId) {
         log.info("getActiveExams - start");
         Page<Exam> page = examRepository.findAllWithFilters(searchData, Status.ACTIVE, pageable);
+
+        // Batch-fetch candidate counts and user statuses
+        List<Long> examIds = page.getContent().stream()
+                .map(BaseEntity::getId).collect(Collectors.toList());
+
+        Map<Long, Long> candidateCountMap = new HashMap<>();
+        if (!examIds.isEmpty()) {
+            examRepository.countCandidatesByExamIds(examIds)
+                    .forEach(row -> candidateCountMap.put((Long) row[0], (Long) row[1]));
+        }
+
+        Map<Long, Candidate> userCandidateMap = new HashMap<>();
+        if (userId != null && !examIds.isEmpty()) {
+            Optional<User> user = userRepository.findById(userId);
+            user.ifPresent(value -> candidateRepository.findByUserAndExamIds(value, examIds)
+                    .forEach(c -> userCandidateMap.put(c.getExam().getId(), c)));
+        }
+
         return page.map(exam -> {
             ExamDto examDto = modelMapper.map(exam, ExamDto.class);
-            Long candidateCount = candidateRepository.countByExamId(exam.getId());
-            examDto.setCandidateCount(candidateCount);
-            if (userId != null) {
-                Optional<User> user = userRepository.findById(userId);
-                if (user.isPresent()) {
-                    Optional<Candidate> optional = candidateRepository.findByUserAndExam(user.get(), exam);
-                    optional.ifPresent(candidate -> examDto.setCandidateStatus(candidate.getCandidateStatus()));
-                }
+            examDto.setCandidateCount(candidateCountMap.getOrDefault(exam.getId(), 0L));
+            Candidate candidate = userCandidateMap.get(exam.getId());
+            if (candidate != null) {
+                examDto.setCandidateStatus(candidate.getCandidateStatus());
             }
             return examDto;
         });
@@ -132,14 +145,15 @@ public class StudentExamServiceImpl implements StudentExamService {
             throw new RuntimeException(ExamMessages.NOT_ENOUGH_QUESTIONS);
         }
 
-        // Save exam questions
-        for (Questions question : randomQuestions) {
+        // Save exam questions in batch
+        List<ExamQuestion> examQuestionsList = randomQuestions.stream().map(question -> {
             ExamQuestion examQuestion = new ExamQuestion();
             examQuestion.setCandidate(candidate);
             examQuestion.setQuestion(question);
             examQuestion.update(username);
-            examQuestionRepository.save(examQuestion);
-        }
+            return examQuestion;
+        }).collect(Collectors.toList());
+        examQuestionRepository.saveAll(examQuestionsList);
 
         log.info("startExam - end, generated {} questions", randomQuestions.size());
         return getQuestionsForCandidate(candidate);
@@ -214,8 +228,8 @@ public class StudentExamServiceImpl implements StudentExamService {
             throw new RuntimeException(ExamMessages.EXAM_ALREADY_ATTENDED);
         }
 
-        // Evaluate all answers
-        List<ExamQuestion> examQuestions = examQuestionRepository.findByCandidate(candidate);
+        // Evaluate all answers (JOIN FETCH, then batch save)
+        List<ExamQuestion> examQuestions = examQuestionRepository.findByCandidateWithFullDetails(candidate);
         int correctCount = 0;
 
         for (ExamQuestion eq : examQuestions) {
@@ -228,8 +242,8 @@ public class StudentExamServiceImpl implements StudentExamService {
             } else {
                 eq.setIsCorrect(false);
             }
-            examQuestionRepository.save(eq);
         }
+        examQuestionRepository.saveAll(examQuestions);
 
         // Update candidate
         candidate.setCandidateStatus(ExamStatus.ATTENDED);
@@ -265,7 +279,8 @@ public class StudentExamServiceImpl implements StudentExamService {
     // ---- Private helper methods ----
 
     private List<StudentExamQuestionDto> getQuestionsForCandidate(Candidate candidate) {
-        List<ExamQuestion> examQuestions = examQuestionRepository.findByCandidate(candidate);
+        // Uses JOIN FETCH to load questions + options in a single query
+        List<ExamQuestion> examQuestions = examQuestionRepository.findByCandidateWithQuestionsAndOptions(candidate);
         return examQuestions.stream()
                 .map(this::mapToStudentExamQuestionDto)
                 .collect(Collectors.toList());

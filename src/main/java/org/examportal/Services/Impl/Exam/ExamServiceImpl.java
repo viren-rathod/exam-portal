@@ -18,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +33,8 @@ public class ExamServiceImpl implements ExamService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public ExamServiceImpl(ExamRepository examRepository, CandidateRepository candidateRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public ExamServiceImpl(ExamRepository examRepository, CandidateRepository candidateRepository,
+                           UserRepository userRepository, ModelMapper modelMapper) {
         this.examRepository = examRepository;
         this.candidateRepository = candidateRepository;
         this.userRepository = userRepository;
@@ -54,13 +58,13 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamDto updateExam(ExamDto exam, String user) {
         log.info(String.format("updateExam - start %s", exam));
-        
+
         Exam existingExam = examRepository.findById(exam.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", exam.getId()));
-                
+
         Exam savedExam = modelMapper.map(exam, Exam.class);
         savedExam.setExamCode(existingExam.getExamCode());
-        
+
         savedExam.update(user);
         examRepository.save(savedExam);
         ExamDto examDto = modelMapper.map(savedExam, ExamDto.class);
@@ -71,7 +75,8 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamDto startExam(Long examId, String user) {
         log.info(String.format("startExam - start %d", examId));
-        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
         exam.setStatus(Status.ACTIVE);
         examRepository.save(exam);
         ExamDto examDto = modelMapper.map(exam, ExamDto.class);
@@ -82,7 +87,8 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamDto stopExam(Long examId, String user) {
         log.info(String.format("stopExam - start %d", examId));
-        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
         exam.setStatus(Status.INACTIVE);
         examRepository.save(exam);
         ExamDto examDto = modelMapper.map(exam, ExamDto.class);
@@ -111,16 +117,30 @@ public class ExamServiceImpl implements ExamService {
         log.info(String.format("getAllActiveExams - start %s %s %d", pageable, searchData, userId));
         Page<Exam> page = examRepository.findAllWithFilters(searchData, Status.ACTIVE, pageable);
         log.info(String.format("getAllActiveExams - end %s", page));
+
+        // Batch-fetch candidate counts and user statuses
+        List<Long> examIds = page.getContent().stream()
+                .map(Exam::getId).collect(Collectors.toList());
+
+        Map<Long, Long> candidateCountMap = new HashMap<>();
+        if (!examIds.isEmpty()) {
+            examRepository.countCandidatesByExamIds(examIds)
+                    .forEach(row -> candidateCountMap.put((Long) row[0], (Long) row[1]));
+        }
+
+        Map<Long, Candidate> userCandidateMap = new HashMap<>();
+        if (userId != null && !examIds.isEmpty()) {
+            Optional<User> user = userRepository.findById(userId);
+            user.ifPresent(value -> candidateRepository.findByUserAndExamIds(value, examIds)
+                    .forEach(c -> userCandidateMap.put(c.getExam().getId(), c)));
+        }
+
         return page.map(exam -> {
             ExamDto examDto = modelMapper.map(exam, ExamDto.class);
-            Long candidateCount = candidateRepository.countByExamId(exam.getId());
-            examDto.setCandidateCount(candidateCount);
-            if (userId != null) {
-                Optional<User> user = userRepository.findById(userId);
-                if (user.isPresent()) {
-                    Optional<Candidate> optional = candidateRepository.findByUserAndExam(user.get(), exam);
-                    optional.ifPresent(candidate -> examDto.setCandidateStatus(candidate.getCandidateStatus()));
-                }
+            examDto.setCandidateCount(candidateCountMap.getOrDefault(exam.getId(), 0L));
+            Candidate candidate = userCandidateMap.get(exam.getId());
+            if (candidate != null) {
+                examDto.setCandidateStatus(candidate.getCandidateStatus());
             }
             return examDto;
         });
@@ -129,7 +149,8 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamDto getExam(Long examId) {
         log.info(String.format("getExam - start %d", examId));
-        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
         ExamDto examDto = modelMapper.map(exam, ExamDto.class);
         log.info(String.format("getExam - end %s", examDto));
         return examDto;
@@ -138,7 +159,8 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public void deleteExam(Long examId) {
         log.info(String.format("deleteExam - start %d", examId));
-        Exam exam = examRepository.findById(examId).orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exam", "id", examId));
         log.info(String.format("deleteExam - end %s", exam));
         examRepository.delete(exam);
     }

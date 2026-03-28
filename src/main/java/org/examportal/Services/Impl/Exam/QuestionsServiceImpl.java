@@ -32,7 +32,8 @@ public class QuestionsServiceImpl implements QuestionsService {
     private final CategoryRepository categoryRepository;
     private final OptionService optionService;
 
-    public QuestionsServiceImpl(QuestionsRepository questionsRepository, ModelMapper modelMapper, CategoryRepository categoryRepository, OptionService optionService) {
+    public QuestionsServiceImpl(QuestionsRepository questionsRepository, ModelMapper modelMapper,
+                                CategoryRepository categoryRepository, OptionService optionService) {
         this.questionsRepository = questionsRepository;
         this.modelMapper = modelMapper;
         this.categoryRepository = categoryRepository;
@@ -49,8 +50,10 @@ public class QuestionsServiceImpl implements QuestionsService {
         return mp;
     }
 
-    private Map<String, Object> getQuestionInfo(MapObject<QuestionsDto, List<OptionDto>> requestDto, String user, QuestionsDto questionsDto, Questions question) {
-        Category category = categoryRepository.findById(questionsDto.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category", "id", questionsDto.getCategoryId()));
+    private Map<String, Object> getQuestionInfo(MapObject<QuestionsDto, List<OptionDto>> requestDto, String user,
+                                                QuestionsDto questionsDto, Questions question) {
+        Category category = categoryRepository.findById(questionsDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", questionsDto.getCategoryId()));
         question.setCategory(category);
         question.update(user);
         Questions savedQuestion = questionsRepository.save(question);
@@ -69,7 +72,8 @@ public class QuestionsServiceImpl implements QuestionsService {
         log.info(String.format("updateQuestions - start %s", requestDto));
         QuestionsDto questionsDto = requestDto.getT();
         Questions question = modelMapper.map(questionsDto, Questions.class);
-        questionsRepository.findById(questionsDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionsDto.getId()));
+        questionsRepository.findById(questionsDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionsDto.getId()));
         Map<String, Object> mp = getQuestionInfo(requestDto, user, questionsDto, question);
         log.info(String.format("updateQuestions - end %s", mp));
         return mp;
@@ -88,13 +92,27 @@ public class QuestionsServiceImpl implements QuestionsService {
         log.info(String.format("findPaginated - start %s %s", pageable, searchData));
         Page<Questions> page = questionsRepository.findAllWithFilters(searchData, pageable);
         log.info(String.format("findPaginated - end %s", page));
-        return page.map(this::getQuestionObject);
+
+        // Batch-load options for all questions in the page
+        List<Long> questionIds = page.getContent().stream()
+                .map(Questions::getId).collect(Collectors.toList());
+        List<Questions> questionsWithOptions = questionIds.isEmpty()
+                ? List.of()
+                : questionsRepository.findAllByIdsWithOptions(questionIds);
+        Map<Long, Questions> questionsMap = questionsWithOptions.stream()
+                .collect(Collectors.toMap(Questions::getId, q -> q));
+
+        return page.map(question -> {
+            Questions enriched = questionsMap.getOrDefault(question.getId(), question);
+            return getQuestionObjectFromEntity(enriched);
+        });
     }
 
     @Override
     public Map<String, Object> findByQuestionId(Long questionId) {
         log.info(String.format("findByQuestionId - start %d", questionId));
-        Questions questions = questionsRepository.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
+        Questions questions = questionsRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
         log.info(String.format("findByQuestionId - end %s", questions));
         QuestionsDto questionsDto = modelMapper.map(questions, QuestionsDto.class);
         Set<OptionDto> allOptions = optionService.findAllByQuestion(questions.getId());
@@ -107,7 +125,8 @@ public class QuestionsServiceImpl implements QuestionsService {
     @Override
     public Set<Map<String, Object>> findQuestionsByCategoryId(Long categoryId) {
         log.info(String.format("findQuestionsByCategoryId - start %d", categoryId));
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
         Set<Questions> questions = questionsRepository.findByCategory(category);
         log.info(String.format("findQuestionsByCategoryId - end %s", questions));
         return getQuestionsMap(questions.stream());
@@ -116,7 +135,8 @@ public class QuestionsServiceImpl implements QuestionsService {
     @Override
     public void deleteQuestion(Long questionId) {
         log.info("deleteQuestion - start");
-        questionsRepository.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
+        questionsRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
         questionsRepository.deleteById(questionId);
         log.info("deleteQuestion - end");
     }
@@ -136,6 +156,20 @@ public class QuestionsServiceImpl implements QuestionsService {
     public Map<String, Object> getQuestionObject(Questions question) {
         QuestionsDto questionsDto = modelMapper.map(question, QuestionsDto.class);
         Set<OptionDto> allOptions = optionService.findAllByQuestion(question.getId());
+        Map<String, Object> mp = new HashMap<>();
+        mp.put("t", questionsDto);
+        mp.put("k", allOptions);
+        return mp;
+    }
+
+    // Uses already-loaded options from entity
+    private Map<String, Object> getQuestionObjectFromEntity(Questions question) {
+        QuestionsDto questionsDto = modelMapper.map(question, QuestionsDto.class);
+        Set<OptionDto> allOptions = question.getOptions() != null
+                ? question.getOptions().stream()
+                .map(opt -> modelMapper.map(opt, OptionDto.class))
+                .collect(Collectors.toSet())
+                : Set.of();
         Map<String, Object> mp = new HashMap<>();
         mp.put("t", questionsDto);
         mp.put("k", allOptions);

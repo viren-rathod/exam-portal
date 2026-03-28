@@ -18,12 +18,12 @@ import java.util.Set;
 public class Questions extends BaseEntity {
     @NotEmpty
     @Lob
-    @Column(nullable = false, unique = true,length = 512)
+    @Column(nullable = false, unique = true, length = 512)
     private String title;
 
     private String description;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Options> options;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

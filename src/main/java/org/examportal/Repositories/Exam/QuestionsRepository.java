@@ -29,4 +29,8 @@ public interface QuestionsRepository extends JpaRepository<Questions, Long> {
             "WHERE qc.category_id IN (:categoryIds) ORDER BY RAND() LIMIT :limit", nativeQuery = true)
     List<Long> findRandomQuestionIdsByCategoryIds(@Param("categoryIds") List<Long> categoryIds,
                                                   @Param("limit") int limit);
+
+    // Fetch questions with their options eagerly by IDs
+    @Query("SELECT DISTINCT q FROM Questions q LEFT JOIN FETCH q.options WHERE q.id IN :ids")
+    List<Questions> findAllByIdsWithOptions(@Param("ids") List<Long> ids);
 }

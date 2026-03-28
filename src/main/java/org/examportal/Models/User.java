@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
@@ -47,9 +47,11 @@ public class User extends BaseEntity {
     private String profileImage;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "enum('ACTIVE','INACTIVE')")
     private Status status;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "enum('GOOGLE','LOCAL')")
     private AuthProvider provider;
 
     private String providerId;

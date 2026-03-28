@@ -34,6 +34,7 @@ public class Exam extends BaseEntity {
     private String examCode;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "enum('ACTIVE','INACTIVE')")
     private Status status;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
