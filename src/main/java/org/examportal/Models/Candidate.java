@@ -42,6 +42,7 @@ public class Candidate extends BaseEntity {
     private Long cgpa;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "enum('ATTENDED','ATTENDING','NOT_ATTENDED')")
     private ExamStatus candidateStatus;
 
     private LocalDateTime examStartTime;

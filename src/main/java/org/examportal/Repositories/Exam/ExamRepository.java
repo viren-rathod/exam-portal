@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ExamRepository extends JpaRepository<Exam, Long> {
     @Query("SELECT e FROM Exam e WHERE " +
             "(:searchData IS NULL OR " +
@@ -21,4 +23,8 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     Page<Exam> findAllWithFilters(@Param("searchData") String searchData,
                                   @Param("status") Status status,
                                   Pageable pageable);
+
+    // Bulk count candidates per exam
+    @Query("SELECT c.exam.id, COUNT(c) FROM Candidate c WHERE c.exam.id IN :examIds GROUP BY c.exam.id")
+    List<Object[]> countCandidatesByExamIds(@Param("examIds") List<Long> examIds);
 }

@@ -1,9 +1,6 @@
 package org.examportal.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +16,6 @@ import org.examportal.Constants.UserRole;
 public class Role extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "enum('ADMIN','USER')")
     private UserRole name;
 }
