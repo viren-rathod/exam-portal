@@ -14,7 +14,6 @@ import org.examportal.Repositories.RoleRepository;
 import org.examportal.Repositories.UserRepository;
 import org.examportal.Security.JwtTokenProvider;
 import org.examportal.Services.AuthService;
-import org.examportal.Services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,20 +34,17 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager,
                            UserRepository userRepository,
                            RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder,
-                           JwtTokenProvider jwtTokenProvider,
-                           UserService userService) {
+                           JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.userService = userService;
     }
 
     @Override
@@ -68,16 +64,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterDto registerDto) {
         log.info(String.format("register - start %s", registerDto));
-        if (Boolean.TRUE.equals(userService.existByUsername(registerDto.getUsername()))) {
-            throw new ExamAPIException(HttpStatus.BAD_REQUEST, UserMessages.USER_EXIST);
-        }
-
         if (Boolean.TRUE.equals(userRepository.existsByEmail(registerDto.getEmail()))) {
             throw new ExamAPIException(HttpStatus.BAD_REQUEST, UserMessages.EMAIL_EXIST);
         }
 
         User user = new User();
-        user.setUsername(registerDto.getUsername());
+        String nameToUse = registerDto.getName() != null && !registerDto.getName().trim().isEmpty() 
+            ? registerDto.getName() 
+            : registerDto.getUsername();
+        user.setName(nameToUse);
+        user.setUsername(registerDto.getEmail());
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.update(registerDto.getEmail());

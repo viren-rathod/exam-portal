@@ -80,7 +80,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private User registerNewUser(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
         User user = new User();
         user.setEmail((String) oAuth2User.getAttributes().get("email"));
-        user.setUsername((String) oAuth2User.getAttributes().get("name"));
+        user.setUsername((String) oAuth2User.getAttributes().get("email"));
+        user.setName((String) oAuth2User.getAttributes().get("name"));
         // You might need to set a default role here
         Role userRole = roleRepository.findByName(UserRole.USER)
                 .orElseThrow(() -> new ExamAPIException(HttpStatus.NOT_FOUND, "Default role not found"));
@@ -89,7 +90,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         user.setPassword((passwordEncoder.encode("password")));
         user.setProviderId(oAuth2User.getName());
-        
+
         String registrationId = userRequest.getClientRegistration().getRegistrationId().toUpperCase(); // e.g., "google" -> "GOOGLE"
         AuthProvider provider = AuthProvider.valueOf(registrationId);
         user.setProvider(provider);
